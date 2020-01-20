@@ -1,8 +1,8 @@
 __author__ = "christopherdavidson"
 
 from flask import Flask, render_template, request, session
-from src.common.database import Database
-from src.models.user import User
+from common.database import Database
+from models.user import User
 import os
 
 app = Flask(__name__)
@@ -82,5 +82,5 @@ def register_user():
 
 
 if __name__ == '__main__':
-    app.run(port=4995, debug=True)
+    app.run(debug=True)
 
