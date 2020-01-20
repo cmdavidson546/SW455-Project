@@ -4,14 +4,14 @@ import pymongo
 import os
 
 class Database(object):
-    URI = os.environ.get("MONGOLAB_URI")
+    URI = os.environ.get("MONGODB_URI")
     DATABASE = None                                     # shared for all instances
 
     @staticmethod
     def initialize():
         client = pymongo.MongoClient(Database.URI)      # connect to mongodb instance
-        #Database.DATABASE = client.get_default_database()   
-        Database.DATABASE = client['heroku_qrf111l3']
+        Database.DATABASE = client.get_default_database()   
+        #Database.DATABASE = client['heroku_qrf111l3']
 
     @staticmethod
     def insert(collection, data):
