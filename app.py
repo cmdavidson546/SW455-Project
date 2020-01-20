@@ -3,10 +3,10 @@ __author__ = "christopherdavidson"
 from flask import Flask, render_template, request, session
 from src.common.database import Database
 from src.models.user import User
-
+import os
 
 app = Flask(__name__)
-app.secret_key = "cdfbd9d0b50b48e4aa935250c657b042"
+app.secret_key = os.environ.get('SECRET_KEY')
 
 @app.before_first_request
 def initialize_database():
