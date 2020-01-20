@@ -1,0 +1,33 @@
+#login-form {
+    margin-top: 25px;
+}
+
+#register-form {
+    margin-top: 25px;
+}
+
+.page-form {
+    max-width: 480px;
+}
+
+.login-text {
+    text-align: center;
+}
+
+.text-center {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.nav-bar-text {
+    text-align: left;
+    padding-top: 8px;
+}
+
+h1 {
+    text-align: center;
+}
+
+body {
+    background-color: white;
+}
