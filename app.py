@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, session
 from common.database import Database
 from models.user import User
 import os
+import re
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
@@ -37,17 +38,28 @@ def user_logout():
     User.logout()
     return render_template('login.html')
 
+# create endpoint '/process_form
+@app.route('/process_login', methods=['POST'])
+def process():
+    email = request.form['email']
+    password = request.form['password']
+    if password and email:
+        if User.login_valid(email=email, password=password):
+            return jsonify({'email': email, 'password': password})
+        else:
+            return jsonify({'error': 'Email or Password Entry Invalid!'})
+    return jsonify({'error' : 'Missing data in form!'})
 
 @app.route('/auth/login', methods=['POST', 'GET'])
 def user_login():
-    # get email from login page
+    # get email and password from hidden ajax login form
     email = request.form['email']
-    # set error flag to none
-    error = None
-    # if POST used properly passed through endpoint
+    password = request.form['password']
+
+    # if POST used properly passed through Ajax hidden form
     if request.method == 'POST':
         # if login_valid method in user.py class returns TRUE
-        if User.login_valid(request.form['email'],request.form['password']):
+        if User.login_valid(email=email, password=password):
             # start session in user.py class
             User.login(email)
             # return name data from user profile
@@ -55,30 +67,43 @@ def user_login():
             # send user to profile page...also can send any information needed including user email
             # by sending the session email we can then look up in db for all the other info
             return render_template('profile.html', email=session['email'], name=user.name)
-        else:
-            error = 'Invalid username/password'
-    # the code below is executed if the request method
-    # was GET or the credentials were invalid
-    return render_template('login_error.html', error=error)
+    return render_template('login_error.html', error='GET POST NOT ALLOWED!')
 
 
-@app.route('/auth/register', methods=['POST', 'GET'])
-def register_user():
-    # Get from Form: name, email, password, height, weight, country
+# create endpoint '/process_form
+@app.route('/process_register', methods=['POST'])
+def processRegister():
+
     name = request.form['name']
     email = request.form['email']
     password = request.form['password']
 
-    # sanitize
-    error = None
+    if name and password and email:
+    #if email and password:
+        # this one is too restrictive...does not allow regular emails...
+        #if re.match("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2, 3})+$/", email) != None:
+
+        # This one works so/so...most bad emails are still allowed
+        # However, it covers...emails Not allowed:
+        # @you.me.net [ No character before @ ]
+        # mysite.ourearth.com [@ is not present]
+        if re.match("^.+@(\[?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None:
+            return jsonify( { 'name': name, 'email': email, 'password': password } )
+        else:
+            return jsonify({'error': 'Email Invalid!'})
+    return jsonify({'error' : 'Missing data in form!'})
+
+@app.route('/auth/register', methods=['POST', 'GET'])
+def register_user():
+    # Get from hidden Ajax form: name, email, password
+    name = request.form['name']
+    email = request.form['email']
+    password = request.form['password']
+
     if request.method == 'POST':
         User.register(name, email, password)
         return render_template('profile.html', email=email, name=name)
-    else:
-        error = 'Invalid registration'
-    # the code below is executed if the request method
-    # was GET or the credentials were invalid
-    return render_template('registration_error.html', error=error)
+    return render_template('registration_error.html', error='Invalid registration')
 
 
 if __name__ == '__main__':
