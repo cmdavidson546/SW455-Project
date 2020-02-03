@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('form').on('submit', function(event) {
+    $('#login-form').on('submit', function(event) {
         event.preventDefault();
 
         // the ajax call will send the email and password info to app.py for processing
@@ -10,7 +10,7 @@ $(document).ready(function() {
             },
             type: 'POST',
 
-            url: '/auth/js/process_login'  // or.. https://sweng-455-project.herokuapp.com/process_login
+            url: '/auth/static/js/process_login'  // or.. https://sweng-455-project.herokuapp.com/process_login
 
             //url: 'https://sweng-455-project.herokuapp.com/static/js/process_login'
         })

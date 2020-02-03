@@ -39,7 +39,7 @@ def user_logout():
     return render_template('login.html')
 
 # create endpoint '/process_form
-@app.route('/auth/js/process_login', methods=['POST', 'GET'])
+@app.route('/auth/static/js/process_login', methods=['POST', 'GET'])
 def process():
     email = request.form['email']
     password = request.form['password']

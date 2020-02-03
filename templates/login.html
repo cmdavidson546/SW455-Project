@@ -13,7 +13,7 @@
 {% extends "index.html" %}
 
 {% block content %}
-<script src="{{ url_for('static', filename='js/process_login.js') }}"></script>
+
 <div class="container page-form">
     <h1>Welcome to PennSoft Scheduling Tracker Application</h1>
     <p class="login-text">Returning Users should log in</p>
@@ -32,5 +32,5 @@
         <a class="btn btn-primary" href="/register" role="button">Register</a>
     </form>
 </div>
-
+<script src="{{ url_for('static', filename='js/process_login.js') }}"></script>
 {% endblock %}
