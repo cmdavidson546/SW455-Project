@@ -39,7 +39,7 @@ def user_logout():
     return render_template('login.html')
 
 # create endpoint '/process_form
-@app.route('/process_login', methods=['POST'])
+@app.route('/process_login', methods=['POST', 'GET'])
 def process():
     email = request.form['email']
     password = request.form['password']
@@ -71,7 +71,7 @@ def user_login():
 
 
 # create endpoint '/process_form
-@app.route('/process_register', methods=['POST'])
+@app.route('/process_register', methods=['POST', 'GET'])
 def processRegister():
 
     name = request.form['name']
