@@ -1,6 +1,6 @@
 __author__ = "christopherdavidson"
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, jsonify
 from common.database import Database
 from models.user import User
 import os
