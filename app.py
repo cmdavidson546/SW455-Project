@@ -39,7 +39,7 @@ def user_logout():
     return render_template('login.html')
 
 # create endpoint '/process_form
-@app.route('/auth/static/js/process_login', methods=['POST', 'GET'])
+@app.route('/auth/process_login', methods=['POST'])
 def process():
     email = request.form['email']
     password = request.form['password']
@@ -71,7 +71,7 @@ def user_login():
 
 
 # create endpoint '/process_form
-@app.route('/process_register', methods=['POST', 'GET'])
+@app.route('/auth/process_register', methods=['POST'])
 def processRegister():
 
     name = request.form['name']
@@ -79,14 +79,9 @@ def processRegister():
     password = request.form['password']
 
     if name and password and email:
-    #if email and password:
-        # this one is too restrictive...does not allow regular emails...
-        #if re.match("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2, 3})+$/", email) != None:
-
-        # This one works so/so...most bad emails are still allowed
-        # However, it covers...emails Not allowed:
-        # @you.me.net [ No character before @ ]
-        # mysite.ourearth.com [@ is not present]
+        # email types that are currently not allowed:
+            # @you.me.net [ No character before @ ]
+            # mysite.ourearth.com [@ is not present]
         if re.match("^.+@(\[?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None:
             return jsonify( { 'name': name, 'email': email, 'password': password } )
         else:

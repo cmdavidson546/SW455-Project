@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('form').on('submit', function(event) {
+    $('#register-form').on('submit', function(event) {
         event.preventDefault();
 
         // the ajax call will send the email and password info to app.py for processing
@@ -10,7 +10,7 @@ $(document).ready(function() {
                 password: $('#password').val()
             },
             type: 'POST',
-            url: '/process_register'
+            url: '/auth/process_register'
         })
         // the call back from app.py will send an alert to the user if entered info is not valid
         // else we create a hidden <form> and pass the data via POST to the new endpoint using form.submit()
