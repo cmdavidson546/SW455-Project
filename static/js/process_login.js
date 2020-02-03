@@ -9,7 +9,10 @@ $(document).ready(function() {
                 password: $('#password').val()
             },
             type: 'POST',
+
             url: '/process_login'  // or.. https://sweng-455-project.herokuapp.com/process_login
+
+            url: 'https://sweng-455-project.herokuapp.com/process_login'
         })
         // the call back from app.py will send an alert to the user if entered info is not valid
         // else we create a hidden <form> and pass the data via POST to the new endpoint using form.submit()
