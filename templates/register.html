@@ -22,14 +22,14 @@
   <div class="form-row">
     <div class="col-md-12 mb-2">
       <label for="fname">First name</label>
-      <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" value="Mark" required>
+      <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" placeholder="Jim" required>
       <div class="invalid-feedback">
         Please provide first name.
       </div>
     </div>
     <div class="col-md-12 mb-2">
       <label for="lastname">Last name</label>
-      <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" value="Otto" required>
+      <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" placeholder="John" required>
       <div class="invalid-feedback">
         Please provide last name.
       </div>
@@ -39,14 +39,14 @@
   <div class="form-row">
     <div class="col-md-12 mb-2">
       <label for="email">Email</label>
-        <input type="text" class="form-control" id="email" name="email" placeholder="Username" value="" required>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Username" placeholder="test@test.com" required>
         <div class="invalid-feedback">
           Please choose a username.
         </div>
     </div>
     <div class="col-md-10 mb-2">
       <label for="password">Password</label>
-      <input type="password" class="form-control" id="password" name="password" placeholder="8-10 characters" value="123" required>
+      <input type="password" class="form-control" id="password" name="password" placeholder="8-10 characters" placeholder="" required>
       <div class="invalid-feedback">
         Please provide a valid password.
       </div>
@@ -54,58 +54,35 @@
   </div>
 
   <div class="form-row">
-    <div class="col-md-3 mb-2">
-      <label for="height1">Height(feet) </label>
-        <select form="register-form" class="form-control" id="height1" name="height1" value="3">
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-            </select>
+    <div class="col-md-3 mb-1">
+      <label for="admin">Admin User?</label>
+        <select form="register-form" class="form-control" id="admin" name="admin" defaultValue="0">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
       <div class="invalid-feedback">
-        Please provide a valid height in feet.
-      </div>
-    </div>
-    <div class="col-md-3 mb-2">
-      <label for="height2">inches</label>
-        <select form="register-form" class="form-control" id="height2" name="height2" value="0">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </select>
-      <div class="invalid-feedback">
-        Please provide a valid height inches format.
+        Please provide a valid response. State whether you are an admin user.
       </div>
     </div>
   </div>
-
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="weight">Weight</label>
-      <input type="text" class="form-control" id="weight" name="weight" placeholder="Weight in pounds (lb)" value="180" required>
+      <input type="text" class="form-control" id="weight" name="weight" placeholder="Weight in pounds (lb)" placeholder="180" required>
       <div class="invalid-feedback">
         Please provide weight in pounds.
       </div>
     </div>
       <div class="col-md-4 mb-3">
       <label for="age">Age</label>
-      <input type="text" class="form-control" id="age" name="age" placeholder="Age in years (lb)" value="40" required>
+      <input type="text" class="form-control" id="age" name="age" placeholder="Age in years (lb)" placeholder="40" required>
       <div class="invalid-feedback">
         Please provide age in years.
       </div>
     </div>
     <div class="col-md-3 mb-3">
       <label for="country">Country</label>
-      <input type="text" class="form-control" id="country" name="country" placeholder="Enter Country" value="USA" required>
+      <input type="text" class="form-control" id="country" name="country" placeholder="Enter Country" placeholder="USA" required>
       <div class="invalid-feedback">
         Please provide country or region.
       </div>
