@@ -20,43 +20,9 @@
   <form class="needs-validation" id="register-form" action="/auth/register" method="post" novalidate>
 
   <div class="form-row">
-    <div class="col-md-12 mb-2">
-      <label for="fname">First name</label>
-      <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" placeholder="Jim" required>
-      <div class="invalid-feedback">
-        Please provide first name.
-      </div>
-    </div>
-    <div class="col-md-12 mb-2">
-      <label for="lastname">Last name</label>
-      <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" placeholder="John" required>
-      <div class="invalid-feedback">
-        Please provide last name.
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="col-md-12 mb-2">
-      <label for="email">Email</label>
-        <input type="text" class="form-control" id="email" name="email" placeholder="Username" placeholder="test@test.com" required>
-        <div class="invalid-feedback">
-          Please choose a username.
-        </div>
-    </div>
-    <div class="col-md-10 mb-2">
-      <label for="password">Password</label>
-      <input type="password" class="form-control" id="password" name="password" placeholder="8-10 characters" placeholder="" required>
-      <div class="invalid-feedback">
-        Please provide a valid password.
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
     <div class="col-md-3 mb-1">
       <label for="admin">Admin User?</label>
-        <select form="register-form" class="form-control" id="admin" name="admin" defaultValue="0">
+        <select form="register-form" class="form-control" id="admin" name="admin" defaultValue="0" required>
             <option value="0">No</option>
             <option value="1">Yes</option>
         </select>
@@ -65,28 +31,77 @@
       </div>
     </div>
   </div>
+
   <div class="form-row">
-    <div class="col-md-4 mb-3">
-      <label for="weight">Weight</label>
-      <input type="text" class="form-control" id="weight" name="weight" placeholder="Weight in pounds (lb)" placeholder="180" required>
+    <div class="col-md-12 mb-2">
+      <label for="fname">First name</label>
+      <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" required>
       <div class="invalid-feedback">
-        Please provide weight in pounds.
+        Please provide first name.
       </div>
     </div>
-      <div class="col-md-4 mb-3">
-      <label for="age">Age</label>
-      <input type="text" class="form-control" id="age" name="age" placeholder="Age in years (lb)" placeholder="40" required>
+    <div class="col-md-12 mb-2">
+      <label for="lastname">Last name</label>
+      <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" required>
       <div class="invalid-feedback">
-        Please provide age in years.
+        Please provide last name.
       </div>
     </div>
-    <div class="col-md-3 mb-3">
-      <label for="country">Country</label>
-      <input type="text" class="form-control" id="country" name="country" placeholder="Enter Country" placeholder="USA" required>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-12 mb-2">
+      <label for="email">Company Email</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="must use name@company email" required>
+        <div class="invalid-feedback">
+          Please choose a username.
+        </div>
+    </div>
+    <div class="col-md-10 mb-2">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="8-10 characters" required>
       <div class="invalid-feedback">
-        Please provide country or region.
+        Please provide a valid password.
       </div>
     </div>
+  </div>
+
+  <div class="form-row">
+      <div class="col-md-6 mb-1">
+      <label for="cardname">Name on Card</label>
+      <input type="text" class="form-control" id="cardname" name="cardname" placeholder="Name as it appears on card" required>
+      <div class="invalid-feedback">
+        Please provide name on card.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-6 mb-1">
+      <label for="cardnumber">Credit Card Number</label>
+      <input type="text" class="form-control" id="cardnumber" name="cardnumber" placeholder="XXXX XXXX XXXX XXXX" required>
+      <div class="invalid-feedback">
+        Please provide card number.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+       <div class="col-md-3 mb-2">
+      <label for="cardcode">Security Code</label>
+      <input type="text" class="form-control" id="cardcode" name="cardcode" placeholder="123" required>
+      <div class="invalid-feedback">
+        Please provide security code.
+      </div>
+    </div>
+      <div class="col-md-3 mb-2">
+      <label for="zipcode">Zip Code</label>
+      <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="XXXXX" required>
+      <div class="invalid-feedback">
+        Please provide zip code.
+      </div>
+    </div>
+
   </div>
 
   <div class="form-group">
@@ -114,7 +129,7 @@
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
         var forms = document.getElementsByClassName('needs-validation');
 
-        // Loop over them and prevent submission if not filled in
+        // Loop over them and prevent submission
         var validation = Array.prototype.filter.call(forms, function(form) {
             form.addEventListener('submit', function(event) {
 
