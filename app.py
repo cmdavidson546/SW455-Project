@@ -9,22 +9,27 @@ import re
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 
+# initialize db
 @app.before_first_request
 def initialize_database():
     Database.initialize()
 
+# set home endpoint
 @app.route('/')
 def open_app():
     return render_template('login.html')
 
+# set route path to login
 @app.route('/login')
 def user_home():
     return render_template('login.html')
 
+# route to register page
 @app.route('/register')
 def register_page():
     return render_template('register.html')
 
+# link to profile... user must be logged in
 @app.route('/back_to_profile')
 def back_to_profile():
     if session['email'] is not None:
@@ -32,13 +37,13 @@ def back_to_profile():
         return render_template('profile.html', email=session['email'], name=user.name)
     return render_template('login.html')
 
+# path to logout
 @app.route('/auth/logout')
 def user_logout():
-    #[session.pop(key) for key in list(session.keys()) if key != '_flashes']
     User.logout()
     return render_template('login.html')
 
-# create endpoint '/process_form
+# create endpoint for AJAX call to process login information
 @app.route('/auth/process_login', methods=['POST'])
 def process():
     email = request.form['email']
@@ -50,13 +55,14 @@ def process():
             return jsonify({'error': 'Email or Password Entry Invalid!'})
     return jsonify({'error' : 'Missing data in form!'})
 
+# create session for logged in user -> profile.html
 @app.route('/auth/login', methods=['POST', 'GET'])
 def user_login():
     # get email and password from hidden ajax login form
     email = request.form['email']
     password = request.form['password']
 
-    # if POST used properly passed through Ajax hidden form
+    # if POST used properly passed through Ajax created form in process_login.js .done() function
     if request.method == 'POST':
         # if login_valid method in user.py class returns TRUE
         if User.login_valid(email=email, password=password):
@@ -70,7 +76,8 @@ def user_login():
     return render_template('login_error.html', error='GET POST NOT ALLOWED!')
 
 
-# create endpoint '/process_form
+# NOT BEING USED IN CURRENT VERSION - using inline html checks on boxes
+# create endpoint from process_register.js AJAX call
 @app.route('/auth/process_register', methods=['POST'])
 def processRegister():
 
@@ -88,10 +95,12 @@ def processRegister():
             return jsonify({'error': 'Email Invalid!'})
     return jsonify({'error' : 'Missing data in form!'})
 
+# endpoint from main registration form  -> profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
-    # Get from hidden Ajax form: name, email, password
-    name = request.form['name']
+    fname = request.form['fname']
+    lastname = request.form['lastname']
+    name = lastname+', '+fname
     email = request.form['email']
     password = request.form['password']
 
