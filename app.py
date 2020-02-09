@@ -17,98 +17,135 @@ def initialize_database():
 # set home endpoint
 @app.route('/')
 def open_app():
-    return render_template('login.html')
+    return render_template('user_type.html')
+
+                    ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
+@app.route('/auth/user_type', methods=['POST', 'GET'])
+def log_in_by_user_type():
+    account = request.form['account']
+    if account == "0":
+        return render_template('login_admin.html')
+    if account == "1":
+        return render_template('login_client.html')
+    if account == "2":
+        return render_template('register.html')
+    return render_template('user_type.html')
 
 # set route path to login
 @app.route('/login')
 def user_home():
-    return render_template('login.html')
+    return render_template('user_type.html')
+
+# path to logout - NEED TO SEE IF "User.logout()" is buggy for Admin and Client users
+@app.route('/auth/logout')
+def user_logout():
+    User.logout()
+    return render_template('user_type.html')
 
 # route to register page
 @app.route('/register')
 def register_page():
     return render_template('register.html')
 
+    ########### REGISTER NEW USER METHOD ############
+    # endpoint from main registration form  -> client_profile.html
+@app.route('/auth/register', methods=['POST', 'GET'])
+def register_user():
+        # get admin form data
+
+    admin = request.form['admin']
+    admincode = request.form['admincode']
+
+        # make name suitable for db
+    fname = request.form['fname']
+    lastname = request.form['lastname']
+    name = lastname + ', ' + fname
+
+        # get email and password
+    email = request.form['email']
+    password = request.form['password']
+
+    # create userinfo dictionaries for User.object 
+    cardinfo = {
+        'cardname': request.form['cardname'],
+        'cardnumber': request.form['cardnumber'],
+        'cardcode': request.form['cardcode'],
+        'zipcode': request.form['zipcode']
+    }
+    acode = {
+        'admincode': admincode
+    }
+    
+    if request.method == 'POST':
+        if admin == "1":
+            # default code for admin registration
+            if admincode == '11111':
+                # add another layer by seeing if 'email' contains @specific_company_name
+                Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode)
+                return render_template('admin_profile.html', email=email, name=name)
+        else:
+            Client.register(name=name, email=email, password=password, usertype="client", userinfo=cardinfo)
+            return render_template('client_profile.html', email=email, name=name)
+    return render_template('registration_error.html', error='Invalid registration')
+
+        ####### LOGIN EXISTING USER METHODS #########
+# create session for logged in user -> admin_profile.html
+@app.route('/admin/login', methods=['POST', 'GET'])
+def admin_login():
+    # get email and password : IN OTHER ITERATIONS WE CAN GET POST from hidden ajax login form
+    email = request.form['email']
+    password = request.form['password']
+    admincode = request.form['admincode']
+
+    # if POST used properly passed through Ajax created form in process_login.js .done() function
+    if request.method == 'POST':
+        # if login_valid method in user.py class returns TRUE
+        if Admin.login_valid(email=email, password=password):
+            # check on admincode code verification HERE
+            if admincode == '11111':
+            # start session in user.py class
+                Admin.login(email)
+            # return name data from user profile
+                user = Admin.get_by_email(email)
+                #print(user.userinfo[0]) prints '1' for the first digit in 11111
+                if user.usertype == 'admin':
+            # send user to profile page...also can send any information needed including user email
+                    return render_template('admin_profile.html', email=session['email'], name=user.name)
+    return render_template('login_error.html', error='NOT ALLOWED!')
+
+# create session for logged in user -> client_profile.html
+@app.route('/client/login', methods=['POST', 'GET'])
+def client_login():
+    # get email and password : IN OTHER ITERATIONS WE CAN GET POST from hidden ajax login form
+    email = request.form['email']
+    password = request.form['password']
+
+    if request.method == 'POST':
+            # if login_valid method in user.py class returns TRUE
+        if Client.login_valid(email=email, password=password):
+            Client.login(email)
+            user = Client.get_by_email(email)
+            #print(user.usertype)
+            if user.usertype == 'client':
+                return render_template('client_profile.html', email=session['email'], name=user.name)
+    return render_template('login_error.html', error='NOT ALLOWED!')
+
+                
+            ####### BACK TO MENU LINK METHODS #########
 # link to profile... user must be logged in
 @app.route('/back_to_profile')
 def back_to_profile():
     if session['email'] is not None:
         user = User.get_by_email(session['email'])
-        return render_template('profile.html', email=session['email'], name=user.name)
-    return render_template('login.html')
-
-# path to logout
-@app.route('/auth/logout')
-def user_logout():
-    User.logout()
-    return render_template('login.html')
-
-# create endpoint for AJAX call to process login information
-@app.route('/auth/process_login', methods=['POST'])
-def process():
-    email = request.form['email']
-    password = request.form['password']
-    if password and email:
-        if User.login_valid(email=email, password=password):
-            return jsonify({'email': email, 'password': password})
+        if user.check_if_client():
+            return render_template('client_profile.html', email=session['email'], name=user.name)
+        elif user.check_if_admin():
+            return render_template('admin_profile.html', email=session['email'], name=user.name)
         else:
-            return jsonify({'error': 'Email or Password Entry Invalid!'})
-    return jsonify({'error' : 'Missing data in form!'})
+            print("error")
+    return render_template('login_error.html')
 
-# create session for logged in user -> profile.html
-@app.route('/auth/login', methods=['POST', 'GET'])
-def user_login():
-    # get email and password from hidden ajax login form
-    email = request.form['email']
-    password = request.form['password']
-
-    # if POST used properly passed through Ajax created form in process_login.js .done() function
-    if request.method == 'POST':
-        # if login_valid method in user.py class returns TRUE
-        if User.login_valid(email=email, password=password):
-            # start session in user.py class
-            User.login(email)
-            # return name data from user profile
-            user = User.get_by_email(email)
-            # send user to profile page...also can send any information needed including user email
-            # by sending the session email we can then look up in db for all the other info
-            return render_template('profile.html', email=session['email'], name=user.name)
-    return render_template('login_error.html', error='GET POST NOT ALLOWED!')
-
-
-# NOT BEING USED IN CURRENT VERSION - using inline html checks on boxes
-# create endpoint from process_register.js AJAX call
-@app.route('/auth/process_register', methods=['POST'])
-def processRegister():
-
-    name = request.form['name']
-    email = request.form['email']
-    password = request.form['password']
-
-    if name and password and email:
-        # email types that are currently not allowed:
-            # @you.me.net [ No character before @ ]
-            # mysite.ourearth.com [@ is not present]
-        if re.match("^.+@(\[?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None:
-            return jsonify( { 'name': name, 'email': email, 'password': password } )
-        else:
-            return jsonify({'error': 'Email Invalid!'})
-    return jsonify({'error' : 'Missing data in form!'})
-
-# endpoint from main registration form  -> profile.html
-@app.route('/auth/register', methods=['POST', 'GET'])
-def register_user():
-    fname = request.form['fname']
-    lastname = request.form['lastname']
-    name = lastname+', '+fname
-    email = request.form['email']
-    password = request.form['password']
-
-    if request.method == 'POST':
-        User.register(name, email, password)
-        return render_template('profile.html', email=email, name=name)
-    return render_template('registration_error.html', error='Invalid registration')
-
+      ########## App Run() METHOD #############
 
 if __name__ == '__main__':
     app.run(debug=True)

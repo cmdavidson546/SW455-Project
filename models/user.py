@@ -1,33 +1,44 @@
 __author__ = "christopherdavidson"
 
 import uuid
-
 from flask import session
-
 from common.database import Database
 
+# = ex_list if ex_list is not None else []
+# = dict() if data is None else data
 
 class User(object):
-    def __init__(self, name, email, password, _id=None):
+    def __init__(self, name, email, password, usertype, userinfo, _id=None):
         self.name = name
         self.email = email
         self.password = password
+        self.usertype = usertype
+        self.userinfo = dict() if userinfo is None else userinfo
         self._id = uuid.uuid4().hex if _id is None else _id
 
     def json(self):
         return {
+            "usertype": self.usertype,
             "name": self.name,
             "email": self.email,
             "password": self.password,
+            "userinfo": self.userinfo,
             "_id": self._id
         }
 
-    def save_to_mongo(self):
-        Database.insert("users", self.json())
+    def check_if_admin(self):
+        if self.usertype == 'admin':
+            return True
+        return False
 
-    @staticmethod
-    def login_valid(email, password):
-        user = User.get_by_email(email)
+    def check_if_client(self):
+        if self.usertype == 'client':
+            return True
+        return False
+
+    @classmethod
+    def login_valid(cls, email, password):
+        user = cls.get_by_email(email)
         if user is not None:
             return user.password == password
         return False
@@ -46,26 +57,10 @@ class User(object):
 
     @staticmethod
     def login(user_email):
-        #login_valid already called in app.py
+        #login_valid already called in app.py -> register
         # create new session using user's email account
         session['email'] = user_email
 
     @staticmethod
     def logout():
-        # do we want to use:  session.clear() ???
-        # [session.pop(key) for key in list(session.keys()) if key != '_flashes']
         session['email'] = None
-
-    @classmethod
-    def register(cls, name, email, password):
-        # check if user has already registered email
-        user = cls.get_by_email(email)
-        # if not...create new user
-        if user is None:
-            new_user = cls(name, email, password)
-            new_user.save_to_mongo()
-            # start session upon registering
-            session['email'] = email
-        # else return invalid registration
-        else:
-            return False
