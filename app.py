@@ -51,7 +51,7 @@ def register_page():
     # endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
-    # get admin form data
+        # get admin form data
 
     admin = request.form['admin']
     if request.form['admincode'] is not None:
@@ -68,7 +68,6 @@ def register_user():
     email = request.form['email']
     password = request.form['password']
 
-    # create userinfo dictionaries for User.object 
     cardinfo = {
         'cardname': request.form['cardname'],
         'cardnumber': request.form['cardnumber'],
@@ -78,7 +77,6 @@ def register_user():
     acode = {
         'admincode': admincode
     }
-    
     if request.method == 'POST':
         if admin == "1":
             # default code for admin registration
