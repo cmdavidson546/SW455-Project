@@ -51,10 +51,13 @@ def register_page():
     # endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
-        # get admin form data
+    # get admin form data
 
     admin = request.form['admin']
-    admincode = request.form['admincode']
+    if request.form['admincode'] is not None:
+        admincode = request.form['admincode']
+    else:
+        admincode = ""
 
         # make name suitable for db
     fname = request.form['fname']
