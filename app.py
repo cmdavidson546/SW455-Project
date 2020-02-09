@@ -2,6 +2,8 @@ __author__ = "christopherdavidson"
 
 from flask import Flask, render_template, request, session, jsonify
 from common.database import Database
+from models.admin import Admin
+from models.client import Client
 from models.user import User
 import os
 import re
