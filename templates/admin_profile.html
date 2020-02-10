@@ -17,11 +17,92 @@
         </div>
       </div>
 
-        <img src="{{ url_for('static', filename='assets/calander.png') }}" width="500" height="333">
-      <!-- OR CAN TRY... <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> -->
+      <div>
+        <div class="month">
+          <ul>
+            <li class="prev"><a href="/"></a></li>
+            <li class="next">&#10095;</li>
+            <li>Week of August 1, 2020<br>
+            </li>
+          </ul>
+        </div>
 
-        <!-- USED THIS ONE for Dynamic Content -->
-        <!-- <img class="my-4 w-100" id="myChart" src="/plot.png" alt="my plot" width="900" height="380"> -->
+        <ul class="weekdays">
+          <li>Time</li>
+          <li>Mo</li>
+          <li>Tu</li>
+          <li>We</li>
+          <li>Th</li>
+          <li>Fr</li>
+          <li>Total</li>
+        </ul>
+
+        <ul class="days">
+          <li>9AM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>10AM</li>
+          <li> </li>
+          <li><span class="active">Meeting</span></li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>11AM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>12PM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>1PM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>2PM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>3PM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>4PM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li>5PM</li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+          <li> </li>
+        </ul>
+      </div>
 
       <h2>Welcome Admin: {{ name }}</h2>
       <div class="table-responsive">
