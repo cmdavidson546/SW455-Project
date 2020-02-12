@@ -49,11 +49,14 @@ def user_logout():
 def register_page():
     return render_template('register.html')
 
-    ########### REGISTER NEW USER METHOD ############
-    # endpoint from main registration form  -> client_profile.html
+########### REGISTER NEW USER METHOD ############
+# endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
-        # get admin form data
+
+    # get admin form data
+    #request.args.get('language')  # if key doesn't exist, returns None
+    #framework = request.args['framework']  # if key doesn't exist, returns a 400, bad request error
 
     admin = request.form['admin']
     if request.form['admincode'] is not None:
@@ -61,7 +64,11 @@ def register_user():
     else:
         admincode = ""
 
-        # make name suitable for db
+    print(admin)
+    print(admincode)
+
+
+    # make name suitable for db
     fname = request.form['fname']
     lastname = request.form['lastname']
     name = lastname + ', ' + fname
@@ -80,17 +87,26 @@ def register_user():
         'admincode': admincode
     }
     if request.method == 'POST':
+        print(admin == "1")
         if admin == "1":
+            print(admincode == "11111")
             # default code for admin registration
             if admincode == '11111':
                 # add another layer by seeing if 'email' contains @specific_company_name
-                Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode)
-                return render_template('admin_profile.html', email=email, name=name)
+                if Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode) is False:
+                    return render_template('duplicate_user.html', error='Email Already Registered as User')
+                else:
+                    Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode)
+                    return render_template('admin_profile.html', email=email, name=name)
         else:
-            Client.register(name=name, email=email, password=password, usertype="client", userinfo=cardinfo)
-            return render_template('client_profile.html', email=email, name=name)
+            if Client.register(name=name, email=email, password=password, usertype='client', userinfo=cardinfo) is False:
+                return render_template('duplicate_user.html', error='Email Already Registered as User')
+            else:
+                Client.register(name=name, email=email, password=password, usertype='client', userinfo=cardinfo)
+                return render_template('client_profile.html', email=email, name=name)
     return render_template('registration_error.html', error='Invalid registration')
-
+    
+    
         ####### LOGIN EXISTING USER METHODS #########
 # create session for logged in user -> admin_profile.html
 @app.route('/admin/login', methods=['POST', 'GET'])

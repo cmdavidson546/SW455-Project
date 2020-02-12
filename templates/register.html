@@ -17,25 +17,94 @@
 <div class="container page-form">
     <h1>Register New User</h1>
 
-  <form class="needs-validation" id="register-form" action="/auth/register" method="post" novalidate>
-
   <div class="form-row">
-    <div class="col-md-3 mb-2">
-      <label for="admin">Admin User?</label>
-        <select form="register-form" class="form-control" id="admin" name="admin" defaultValue="0" required>
-            <option value="0">No</option>
-            <option value="1">Yes</option>
-        </select>
-      <div class="invalid-feedback">
-        Please provide a valid response. State whether you are an admin user.
-      </div>
-    </div>
-      <div class="col-md-5 mb-2">
-          <label for="admincode">If admin, enter code provided to you</label>
-          <input type="password" class="form-control" id="admincode" name="admincode" placeholder="enter 5 digits" value="">
 
-      </div>
+    <div class="col-md-5 mb-2">
+        <button class="btn btn-outline-dark" onclick="myFunction()">Register as Admin</button>
+
+    </div>
+    <div class="col-md-5 mb2">
+        <button class="btn btn-outline-dark" onclick="myFunction2()">Enter Credit Card</button>
+    </div>
+
+
   </div>
+    <script>
+    function myFunction() {
+
+      var x = document.getElementById("admincode");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+
+      var changeVal = document.getElementById('admin');
+      if (changeVal.value == "0") {
+        changeVal.value = "1";
+      }
+      else {
+        changeVal.value = "0";
+      }
+    }
+    </script>
+
+<!-- btn btn-secondary btn-sm active -->
+
+
+    <script>
+        function myFunction2() {
+          var x = document.getElementById("entercard");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+          } else {
+            x.style.display = "none";
+          }
+
+        }
+    </script>
+
+
+    <!-- BEGIN FORM HERE -->
+<form class="needs-validation" id="register-form" action="/auth/register" method="post" novalidate>
+    <div class="form-row" id="entercode" >
+        <input type="password" class="form-control" id="admin" name="admin" value="0" style="display:none;">
+        <input type="password" class="form-control" id="admincode" name="admincode" placeholder="Enter code provided to you" value="" style="display:none;">
+    </div>
+    <div class="form-row" id="entercard" style="display:none;">
+          <div class="form-row">
+              <div class="col-md-6 mb-1">
+              <label for="cardname">Name on Card</label>
+              <input type="text" class="form-control" id="cardname" name="cardname" placeholder="Name as it appears on card" value="">
+              <div class="invalid-feedback">
+                Please provide name on card.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-md-6 mb-1">
+              <label for="cardnumber">Credit Card Number</label>
+              <input type="password" class="form-control" id="cardnumber" name="cardnumber" placeholder="XXXX XXXX XXXX XXXX" value="">
+              <div class="invalid-feedback">
+                Please provide card number.
+              </div>
+            </div>
+          </div>
+
+        <div class="form-row">
+               <div class="col-md-3 mb-2">
+                    <label for="cardcode">Security Code</label>
+                    <input type="password" class="form-control" id="cardcode" name="cardcode" placeholder="123" value="">
+                    <div class="invalid-feedback">Please provide security code.</div>
+              </div>
+              <div class="col-md-3 mb-2">
+                 <label for="zipcode">Zip Code</label>
+                <input type="password" class="form-control" id="zipcode" name="zipcode" placeholder="XXXXX" value="">
+                <div class="invalid-feedback">Please provide zip code.</div>
+              </div>
+          </div>
+    </div>
 
   <div class="form-row">
     <div class="col-md-12 mb-2">
@@ -62,6 +131,7 @@
           Please choose a username.
         </div>
     </div>
+
     <div class="col-md-10 mb-2">
       <label for="password">Password</label>
       <input type="password" class="form-control" id="password" name="password" placeholder="8-10 characters" value="" required>
@@ -69,45 +139,9 @@
         Please provide a valid password.
       </div>
     </div>
+
   </div>
 <hr>
-  <div class="form-row">
-      <div class="col-md-6 mb-1">
-      <label for="cardname">Name on Card</label>
-      <input type="text" class="form-control" id="cardname" name="cardname" placeholder="Name as it appears on card" value="">
-      <div class="invalid-feedback">
-        Please provide name on card.
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="col-md-6 mb-1">
-      <label for="cardnumber">Credit Card Number</label>
-      <input type="password" class="form-control" id="cardnumber" name="cardnumber" placeholder="XXXX XXXX XXXX XXXX" value="">
-      <div class="invalid-feedback">
-        Please provide card number.
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
-       <div class="col-md-3 mb-2">
-      <label for="cardcode">Security Code</label>
-      <input type="password" class="form-control" id="cardcode" name="cardcode" placeholder="123" value="">
-      <div class="invalid-feedback">
-        Please provide security code.
-      </div>
-    </div>
-      <div class="col-md-3 mb-2">
-      <label for="zipcode">Zip Code</label>
-      <input type="password" class="form-control" id="zipcode" name="zipcode" placeholder="XXXXX" value="">
-      <div class="invalid-feedback">
-        Please provide zip code.
-      </div>
-    </div>
-
-  </div>
 
   <div class="form-group">
     <div class="form-check">
@@ -120,7 +154,7 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-primary" type="submit">Submit form</button>
+  <button class="btn btn-outline-primary" type="submit">Submit form</button>
 </form>
 </div>
 
