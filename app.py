@@ -1,6 +1,6 @@
 __author__ = "christopherdavidson"
 
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, make_response
 from common.database import Database
 from models.admin import Admin
 from models.client import Client
@@ -83,6 +83,7 @@ def register_user():
     acode = {
         'admincode': admincode
     }
+    
     if request.method == 'POST':
         print(admin == "1")
         if admin == "1":
@@ -107,7 +108,7 @@ def register_user():
 
     
     
-        ####### LOGIN EXISTING USER METHODS #########
+####### LOGIN EXISTING USER METHODS #########
 # create session for logged in user -> admin_profile.html
 @app.route('/admin/login', methods=['POST', 'GET'])
 def admin_login():
@@ -122,14 +123,14 @@ def admin_login():
         if Admin.login_valid(email=email, password=password):
             # check on admincode code verification HERE
             if admincode == '11111':
-            # start session in user.py class
+                # start session in user.py class
                 Admin.login(email)
-            # return name data from user profile
+                # return name data from user profile
                 user = Admin.get_by_email(email)
                 #meetings = Meeting.get_by_email(email)
                 #print(user.userinfo[0]) prints '1' for the first digit in 11111
                 if user.usertype == 'admin':
-            # send user to profile page...also can send any information needed including user email
+                    # send user to profile page...also can send any information needed including user email
                     return make_response(back_to_profile())
                     #return render_template('admin_profile.html', email=session['email'], name=user.name, user=user, meetings=meetings)
     return render_template('login_error.html', error='NOT ALLOWED!')
@@ -154,14 +155,14 @@ def client_login():
     return render_template('login_error.html', error='NOT ALLOWED!')
 
                 
-            ####### BACK TO MENU LINK METHODS #########
+            
+####### BACK TO MENU LINK METHODS #########
 # link to profile... user must be logged in
 @app.route('/back_to_profile')
 def back_to_profile():
     if session['email'] is not None:
         user = User.get_by_email(session['email'])
         meetings = Meeting.get_by_email(session['email'])
-        print(meetings)
         if user.check_if_client():
             return render_template('client_profile.html', email=session['email'], name=user.name, meetings=meetings)
         elif user.check_if_admin():
@@ -169,6 +170,8 @@ def back_to_profile():
         else:
             print("error")
     return render_template('login_error.html', error='Invalid Request')
+
+
 
 ########### CREATE MEETING METHODS
 @app.route('/auth/newmeeting', methods=['POST', 'GET'])
