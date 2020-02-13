@@ -162,7 +162,10 @@ def client_login():
 def back_to_profile():
     if session['email'] is not None:
         user = User.get_by_email(session['email'])
-        meetings = Meeting.get_by_email(session['email'])
+        if Meeting.get_by_email(session['email']):
+            meetings = Meeting.get_by_email(session['email'])
+        else:
+            meetings = []
         if user.check_if_client():
             return render_template('client_profile.html', email=session['email'], name=user.name, meetings=meetings)
         elif user.check_if_admin():

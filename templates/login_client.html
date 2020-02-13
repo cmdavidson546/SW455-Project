@@ -14,8 +14,6 @@
 
 {% block content %}
 
-<!-- <script src="{{ url_for('static', filename='js/process_login.js') }}"></script> -->
-
 <div class="container page-form">
     <h1>PennStateSoft MSS Login</h1>
     <form id="login-form" action="/client/login" method="post">
@@ -30,6 +28,5 @@
         <button type="submit" class="btn btn-outline-primary">Log in</button>
         <a class="btn btn-outline-dark" href="/register" role="button">Register</a>
     </form>
-
 </div>
 {% endblock %}
