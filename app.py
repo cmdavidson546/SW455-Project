@@ -162,7 +162,7 @@ def client_login():
 def back_to_profile():
     if session['email'] is not None:
         user = User.get_by_email(session['email'])
-        if Meeting.get_by_email(session['email']):
+        if Meeting.get_by_email(session['email']) is not None:
             meetings = Meeting.get_by_email(session['email'])
         else:
             meetings = []
