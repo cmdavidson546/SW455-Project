@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
@@ -17,38 +17,46 @@
         </div>
       </div>
 
-      <!--  <img src="{{ url_for('static', filename='assets/calander.png') }}" width="500" height="333"> -->
-      <!-- OR CAN TRY... <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> -->
-
-        <!-- USED THIS ONE for Dynamic Content -->
-        <!-- <img class="my-4 w-100" id="myChart" src="/plot.png" alt="my plot" width="900" height="380"> -->
-
       <h2>Meetings for Client: {{ name }}</h2>
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
+                      <thead>
             <tr>
-              <th>Meeting Name</th>
-                <th>Meeting Date</th>
-                <th>Add-Edit Members</th>
-                <th>Contact Members</th>
-                <th>Edit Meeting</th>
+              <th>Meeting Day</th>
+                <th>Meeting Time</th>
+                <th>Meeting Admin</th>
+                <!-- <th>Contact Members</th>
+                <th>Edit Meeting</th> -->
                 <th>Delete Meeting</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr>
-                  <td>Put Meeting Name Jinja Code Here</td>
-                   <td>Put Date Jinja Code Here</td>
-                    <td><a class="nav-link" href="#">Add-Edit Members</a></td>
-                   <td><a class="nav-link" href="#">Contact Members</a></td>
-                <td><a class="nav-link" href="#">Edit Meeting</a></td>
-                <td><a class="nav-link" href="#">Delete Meeting</a></td>
+
+              {% if meetings[0]|length > 0 %}
+                {% for meeting in meetings %}
+              <tr style="background:#bfc1c9;">
+                    <td> {{ meeting.day }} </td>
+                     <td> {{ meeting.time }} </td>
+                    <td> {{ meeting.email }} </td>
+                    <td><a class="nav-link" href="/delete_one/{{ meeting._id }}">Delete Meeting</a></td>
+                  <!--   <td><a class="nav-link" href="#">Contact Members</a></td>
+                  <td><a class="nav-link" href="#">Edit Meeting</a></td>
+                   -->
             </tr>
+
+                 {% for person in meeting.members %}
+                    {% if meeting.members[person] != "" %}
+                    <tr>
+                      <td> {{ meeting.members[person] }}</td>
+                    </tr>
+                    {% endif %}
+                  {% endfor %}
+             {% endfor %}
+          {% endif %}
           </tbody>
         </table>
       </div>
     </main>
-
 {% endblock %}

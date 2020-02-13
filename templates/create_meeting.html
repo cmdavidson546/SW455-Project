@@ -1,0 +1,195 @@
+{% extends "index_user.html" %}
+
+{% block content %}
+
+      <div>
+        <div class="month">
+          <ul>
+            <li class="prev">&#10094;</li>
+            <li class="next">&#10095;</li>
+            <li>Week of August 1, 2020<br>
+            </li>
+          </ul>
+        </div>
+
+        <ul class="weekdays">
+          <li>Time</li>
+          <li>Mo</li>
+          <li>Tu</li>
+          <li>We</li>
+          <li>Th</li>
+          <li>Fr</li>
+          <li>Total</li>
+        </ul>
+
+        <ul class="days">
+          <li>9AM</li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>10AM</li>
+          <li><a href="#">Schedule</a></li>
+          <li><span class="active">Meeting</span></li>
+          <li><a href="#">Schedule</a></li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>11AM</li>
+            <li><span class="active">Meeting</span></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>12PM</li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><span class="active">Meeting</span></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>1PM</li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>2PM</li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>3PM</li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>4PM</li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li>5PM</li>
+            <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+          <li><a href="#">Schedule</a></li>
+        </ul>
+      </div>
+
+
+<div class="container page-form">
+    <h1>Create Meeting</h1>
+    <button type="button" class="btn btn-outline-primary" id="add-ex">Add Participant</button>
+    <form id="meeting-form" action="/meeting/createnew" method="post">
+        <div class="form-group">
+            <label for="day">Day</label>
+            <select form="meeting-form" class="form-control" id="day" name="day" value="Mon">
+                <option value="Mon">Mon</option>
+                <option value="Tue">Tue</option>
+                <option value="Wed">Wed</option>
+                <option value="Thu">Thu</option>
+                 <option value="Fri">Fri</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="time">Time</label>
+            <select form="meeting-form" class="form-control" id="time" name="time" value="9AM">
+                <option value="9AM">9AM</option>
+                <option value="10AM">10AM</option>
+                <option value="11AM">11AM</option>
+                <option value="12PM">12PM</option>
+                 <option value="1PM">1PM</option>
+                <option value="2PM">2PM</option>
+                <option value="3PM">3PM</option>
+                <option value="4PM">4PM</option>
+                <option value="5PM">5PM</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="p1">Participant 1</label>
+            <input type="text" id="p1" class="form-control" name="p1" placeholder="participant name">
+        </div>
+        <div class="form-group">
+            <label for="p2">Participant 2</label>
+            <input type="text" id="p2" class="form-control" name="p2" placeholder="participant name">
+        </div>
+
+        <div hidden class="form-group" id="add-to">
+            <input type="text" class="form-control" id="p3" name="p3" value = "">
+            <input type="text" class="form-control" id="p4" name="p4" value = "">
+            <input type="text" class="form-control" id="p5" name="p5" value = "">
+            <input type="text" class="form-control" id="p6" name="p6" value = "">
+            <input type="text" class="form-control" id="p7" name="p7" value = "">
+            <input type="text" class="form-control" id="p8" name="p8" value = "">
+            <input type="text" class="form-control" id="p9" name="p9" value = "">
+            <input type="text" class="form-control" id="p10" name="p10" value = "">
+        </div>
+        <div class="form-group" id="add-to-two">
+
+        </div>
+
+        <script>
+            var clicks = 0;
+            // add event listener to 'add new' button
+            document.getElementById("add-ex").addEventListener("click", function() {
+                // increase click counter from 3
+                clicks += 1;
+                var counter = clicks + 2;
+
+                // DELETE/remove tag with same class name and id to eliminate confusion with server
+                var newname = "p" + counter;
+                var change_x = document.getElementById(newname).remove();
+
+                // begin constructing new div for new input element
+                var b = document.createElement("br");
+                var lab = document.createElement("label");
+                var newtitle = "Participant " + counter;
+                lab.innerHTML = newtitle;
+
+                // CREATE new input element
+                var inputNode = document.createElement("input");
+
+                // ADD id to the element
+                var newid = "p" + counter;
+                inputNode.id = newid;
+
+               // ADD name attribute and give it the newname and set the attribute
+                var nm = document.createAttribute("name");
+                nm.value = newid;
+                inputNode.setAttributeNode(nm);
+
+                // ADD default val
+                var val = document.createAttribute("defaultValue");
+                val.value = "";
+                inputNode.setAttributeNode(val);
+
+                // ADD class name
+                inputNode.className = "form-control";
+
+                // SEND TO FORM...for viewing by appending to div class
+                document.getElementById('add-to-two').append(b);
+                document.getElementById('add-to-two').append(lab);
+                document.getElementById('add-to-two').append(inputNode);
+            });
+        </script>
+
+
+        <button type="submit" class="btn btn-success">Create Meeting</button>
+    </form>
+
+</div>
+
+{% endblock %}

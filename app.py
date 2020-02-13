@@ -64,9 +64,6 @@ def register_user():
     else:
         admincode = ""
 
-    print(admin)
-    print(admincode)
-
 
     # make name suitable for db
     fname = request.form['fname']
@@ -97,14 +94,17 @@ def register_user():
                     return render_template('duplicate_user.html', error='Email Already Registered as User')
                 else:
                     Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode)
-                    return render_template('admin_profile.html', email=email, name=name)
+                    meetings = []
+                    return render_template('admin_profile.html', email=email, name=name, meetings=meetings)
         else:
             if Client.register(name=name, email=email, password=password, usertype='client', userinfo=cardinfo) is False:
                 return render_template('duplicate_user.html', error='Email Already Registered as User')
             else:
                 Client.register(name=name, email=email, password=password, usertype='client', userinfo=cardinfo)
-                return render_template('client_profile.html', email=email, name=name)
+                meetings = []
+                return render_template('client_profile.html', email=email, name=name, meetings=meetings)
     return render_template('registration_error.html', error='Invalid registration')
+
     
     
         ####### LOGIN EXISTING USER METHODS #########
@@ -126,10 +126,12 @@ def admin_login():
                 Admin.login(email)
             # return name data from user profile
                 user = Admin.get_by_email(email)
+                #meetings = Meeting.get_by_email(email)
                 #print(user.userinfo[0]) prints '1' for the first digit in 11111
                 if user.usertype == 'admin':
             # send user to profile page...also can send any information needed including user email
-                    return render_template('admin_profile.html', email=session['email'], name=user.name)
+                    return make_response(back_to_profile())
+                    #return render_template('admin_profile.html', email=session['email'], name=user.name, user=user, meetings=meetings)
     return render_template('login_error.html', error='NOT ALLOWED!')
 
 # create session for logged in user -> client_profile.html
@@ -144,9 +146,11 @@ def client_login():
         if Client.login_valid(email=email, password=password):
             Client.login(email)
             user = Client.get_by_email(email)
+            #meetings = Meeting.get_by_email(email)
             #print(user.usertype)
             if user.usertype == 'client':
-                return render_template('client_profile.html', email=session['email'], name=user.name)
+                return make_response(back_to_profile())
+                #return render_template('client_profile.html', email=session['email'], name=user.name, user=user, meetings=meetings)
     return render_template('login_error.html', error='NOT ALLOWED!')
 
                 
@@ -156,13 +160,68 @@ def client_login():
 def back_to_profile():
     if session['email'] is not None:
         user = User.get_by_email(session['email'])
+        meetings = Meeting.get_by_email(session['email'])
+        print(meetings)
         if user.check_if_client():
-            return render_template('client_profile.html', email=session['email'], name=user.name)
+            return render_template('client_profile.html', email=session['email'], name=user.name, meetings=meetings)
         elif user.check_if_admin():
-            return render_template('admin_profile.html', email=session['email'], name=user.name)
+            return render_template('admin_profile.html', email=session['email'], name=user.name, meetings=meetings)
         else:
             print("error")
-    return render_template('login_error.html')
+    return render_template('login_error.html', error='Invalid Request')
+
+########### CREATE MEETING METHODS
+@app.route('/auth/newmeeting', methods=['POST', 'GET'])
+def new_meeting():
+    return render_template('create_meeting.html')
+
+# /<string:workout_id>
+@app.route('/meeting/createnew', methods=['POST', 'GET'])
+def create_meeting():
+
+    if request.method == 'POST':
+        email = session['email']
+        
+        day = request.form['day']
+        time = request.form['time']
+        p1 = request.form['p1']
+        p2 = request.form['p2']
+        p3 = request.form['p3']
+        p4 = request.form['p4']
+        p5 = request.form['p5']
+        p6 = request.form['p6']
+        p7 = request.form['p7']
+        p8 = request.form['p8']
+        p9 = request.form['p9']
+        p10 = request.form['p10']
+
+
+        member_emails = {
+            'p1': p1,
+            'p2': p2,
+            'p3': p3,
+            'p4': p4,
+            'p5': p5,
+            'p6': p6,
+            'p7': p7,
+            'p8': p8,
+            'p9': p9,
+            'p10': p10
+        }
+        meeting = Meeting(day=day, time=time, email=email, members=member_emails)
+        if meeting.isAvailable(day, time):
+            meeting.save_to_mongo()
+            return make_response( back_to_profile() )
+        else:
+            return make_response( back_to_profile() )
+    return render_template('login_error.html', error="Meeting Log Error")
+
+@app.route('/delete_one/<string:meeting_id>')
+def delete_one(meeting_id):
+    meeting = Meeting.from_mongo(meeting_id)
+    meeting.delete_meeting(meeting_id)
+    return make_response(back_to_profile())
+
 
       ########## App Run() METHOD #############
 
