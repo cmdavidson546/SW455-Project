@@ -182,6 +182,7 @@ def back_to_profile():
 def new_meeting():
     return render_template('create_meeting.html')
 
+
 # /<string:workout_id>
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
@@ -219,9 +220,7 @@ def create_meeting():
         if meeting.isAvailable(day, time):
             meeting.save_to_mongo()
             return make_response( back_to_profile() )
-        else:
-            return make_response( back_to_profile() )
-    return render_template('login_error.html', error="Meeting Log Error")
+    return render_template('create_meeting_error.html', error="Meeting Log Error")
 
 @app.route('/delete_one/<string:meeting_id>')
 def delete_one(meeting_id):
