@@ -3,7 +3,7 @@
 
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-
+    <h1>Create New Meeting</h1>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <nav style="border:solid 2px; padding:5px; margin-right:45px;">
         <ul class="weekdays meeting-cal">
@@ -72,8 +72,11 @@
           <li><a href="#">Schedule</a></li>
         </ul>
       </nav>
+
+    </div>
+
          <nav class="container page-form" style="border:solid 2px; padding:5px;">
-    <h3>Create Meeting</h3>
+    <h5>Create Meeting</h5>
     <button type="button" class="btn btn-outline-dark btn-sm" id="add-ex">Add Participant</button>
     <form id="meeting-form" action="/meeting/createnew" method="post">
         <div class="form-group">
@@ -167,8 +170,5 @@
         <button type="submit" class="btn btn-outline-dark btn-sm">Create Meeting</button>
     </form>
 </nav>
-    </div>
-
-
 </main>
 {% endblock %}
