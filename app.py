@@ -231,7 +231,7 @@ def create_meeting():
         if meeting.isAvailable(day, time):
             meeting.save_to_mongo()
             return make_response(back_to_profile())
-    return render_template('create_meeting_error.html', error="Meeting Log Error")
+    return render_template('create_meeting_error.html', error="Meeting Log Error", email=session['email'])
 
 
 @app.route('/delete_one/<string:meeting_id>', methods=['POST', 'GET'])
