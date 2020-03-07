@@ -97,7 +97,7 @@ def register_user():
             if admincode == '11111':
                 # add another layer by seeing if 'email' contains @specific_company_name
                 if Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode) is False:
-                    return render_template('duplicate_user.html', error='Email Already Registered as User')
+                    return render_template('duplicate_user.html', error='Admin Email Already Registered as User')
                 else:
                     Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode)
                     meetings = []
@@ -105,7 +105,7 @@ def register_user():
         else:
             if Client.register(name=name, email=email, password=password, usertype='client',
                                userinfo=cardinfo) is False:
-                return render_template('duplicate_user.html', error='Email Already Registered as User')
+                return render_template('duplicate_user.html', error='Client Email Already Registered as User')
             else:
                 Client.register(name=name, email=email, password=password, usertype='client', userinfo=cardinfo)
                 meetings = []
