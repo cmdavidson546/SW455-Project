@@ -46,12 +46,14 @@ class User(object):
         data = Database.find_one("users", {"email": email})
         if data is not None:
             return cls(**data)
+        return False
 
     @classmethod
     def get_by_id(cls, _id):
         data = Database.find_one("users", {"_id": _id})
         if data is not None:
             return cls(**data)
+        return False
 
     @staticmethod
     def login(user_email):
