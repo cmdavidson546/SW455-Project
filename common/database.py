@@ -23,3 +23,13 @@ class Database(object):
     @staticmethod
     def find_one(collection, query):
         return Database.DATABASE[collection].find_one(query)
+    
+    @staticmethod
+    def update_one(collection, searchVal, newKey, newVal):
+        query = {'_id': searchVal}
+        newdata = {'$set': {newKey: newVal}}
+        Database.DATABASE[collection].update_one(query, newdata)
+
+    @staticmethod
+    def remove_one(collection, searchVal):
+        Database.DATABASE[collection].delete_one({'_id': searchVal})

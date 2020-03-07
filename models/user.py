@@ -4,8 +4,6 @@ import uuid
 from flask import session
 from common.database import Database
 
-# = ex_list if ex_list is not None else []
-# = dict() if data is None else data
 
 class User(object):
     def __init__(self, name, email, password, usertype, userinfo, _id=None):
@@ -58,7 +56,6 @@ class User(object):
     @staticmethod
     def login(user_email):
         #login_valid already called in app.py -> register
-        # create new session using user's email account
         session['email'] = user_email
 
     @staticmethod

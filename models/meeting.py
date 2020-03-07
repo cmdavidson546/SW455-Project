@@ -2,9 +2,7 @@ __author__ = "christopherdavidson"
 
 import uuid
 import datetime
-
 from flask import session
-
 from common.database import Database
 
 """

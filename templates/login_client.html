@@ -14,19 +14,54 @@
 
 {% block content %}
 
+
 <div class="container page-form">
     <h1>PennStateSoft MSS Login</h1>
     <form id="login-form" action="/client/login" method="post">
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="text" id="email" class="form-control" name="email" placeholder="e.g., test@test.com">
+            <input type="text" id="email" class="form-control" name="email" placeholder="e.g., test@test.com" value="test@test.com" required>
         </div>
+                      <div class="invalid-feedback">
+                Please provide a valid email.
+                </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password">
+            <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" value="123" required>
         </div>
+                      <div class="invalid-feedback">
+                Please provide a valid password.
+                </div>
         <button type="submit" class="btn btn-outline-primary">Log in</button>
-        <a class="btn btn-outline-dark" href="/register" role="button">Register</a>
+        <a class="btn btn-outline-dark" href="/register" role="button">Register New User</a>
     </form>
+
 </div>
 {% endblock %}
+    
+             <!-- BUILT IN JS ALERT SYSTEM SCRIPTING HERE  -->
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+   window.addEventListener('load', function() {
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+
+            // if each line checks valid
+                 if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                 }
+            // else add to validated list
+                 form.classList.add('was-validated');
+            }, false);  // check form entries in loop
+        });
+   }, false);
+})();
+</script>

@@ -27,7 +27,7 @@ class Admin(User):
         # check if user has already registered email
         user = cls.get_by_email(email)
         # if not...create new user
-        if user is None:
+        if user is False:
             new_user = cls(name, email, password, usertype, userinfo, _id=None)
             new_user.save_to_mongo()
             # start session upon registering

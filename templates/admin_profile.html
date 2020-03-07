@@ -18,82 +18,6 @@
         </div>
       </div>
 
-      <div>
-        <div class="month">
-          <ul>
-            <li class="prev">&#10094;</li>
-            <li class="next">&#10095;</li>
-            <li>Week of August 1, 2020<br>
-            </li>
-          </ul>
-        </div>
-
-        <ul class="weekdays">
-          <li>Time</li>
-          <li>Mo</li>
-          <li>Tu</li>
-          <li>We</li>
-          <li>Th</li>
-          <li>Fr</li>
-        </ul>
-
-        <ul class="days">
-          <li>9AM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>10AM</li>
-          <li> </li>
-          <li><span class="active">Meeting</span></li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>11AM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>12PM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>1PM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>2PM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>3PM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>4PM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li>5PM</li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-          <li> </li>
-        </ul>
-      </div>
 
 <!-- MEETING LIST -->
       <h2>Meetings</h2>
@@ -104,8 +28,6 @@
               <th>Meeting Day</th>
                 <th>Meeting Time</th>
                 <th>Meeting Admin</th>
-                <!-- <th>Contact Members</th>
-                <th>Edit Meeting</th> -->
                 <th>Delete Meeting</th>
             </tr>
           </thead>
@@ -119,9 +41,6 @@
                      <td> {{ meeting.time }} </td>
                     <td> {{ meeting.email }} </td>
                     <td><a class="nav-link" href="/delete_one/{{ meeting._id }}">Delete Meeting</a></td>
-                  <!--   <td><a class="nav-link" href="#">Contact Members</a></td>
-                  <td><a class="nav-link" href="#">Edit Meeting</a></td>
-                   -->
             </tr>
                  {% for person in meeting.members %}
                     {% if meeting.members[person] != "" %}

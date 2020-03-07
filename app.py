@@ -22,7 +22,11 @@ def initialize_database():
 def open_app():
     return render_template('user_type.html')
 
-                    ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
+
+
+    ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
+
+
 @app.route('/auth/user_type', methods=['POST', 'GET'])
 def log_in_by_user_type():
     account = request.form['account']
@@ -34,30 +38,33 @@ def log_in_by_user_type():
         return render_template('register.html')
     return render_template('user_type.html')
 
+
 # set route path to login
 @app.route('/login')
 def user_home():
     return render_template('user_type.html')
 
-# path to logout - NEED TO SEE IF "User.logout()" is buggy for Admin and Client users
+
+# path to logout
 @app.route('/auth/logout')
 def user_logout():
     User.logout()
     return render_template('user_type.html')
+
 
 # route to register page
 @app.route('/register')
 def register_page():
     return render_template('register.html')
 
+
 ########### REGISTER NEW USER METHOD ############
 # endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
-
     # get admin form data
-    #request.args.get('language')  # if key doesn't exist, returns None
-    #framework = request.args['framework']  # if key doesn't exist, returns a 400, bad request error
+    # request.args.get('language')  # if key doesn't exist, returns None
+    # framework = request.args['framework']  # if key doesn't exist, returns a 400, bad request error
 
     admin = request.form['admin']
     if request.form['admincode'] is not None:
@@ -65,13 +72,12 @@ def register_user():
     else:
         admincode = ""
 
-
     # make name suitable for db
     fname = request.form['fname']
     lastname = request.form['lastname']
     name = lastname + ', ' + fname
 
-        # get email and password
+    # get email and password
     email = request.form['email']
     password = request.form['password']
 
@@ -84,11 +90,9 @@ def register_user():
     acode = {
         'admincode': admincode
     }
-    
+
     if request.method == 'POST':
-        print(admin == "1")
         if admin == "1":
-            print(admincode == "11111")
             # default code for admin registration
             if admincode == '11111':
                 # add another layer by seeing if 'email' contains @specific_company_name
@@ -99,7 +103,8 @@ def register_user():
                     meetings = []
                     return render_template('admin_profile.html', email=email, name=name, meetings=meetings)
         else:
-            if Client.register(name=name, email=email, password=password, usertype='client', userinfo=cardinfo) is False:
+            if Client.register(name=name, email=email, password=password, usertype='client',
+                               userinfo=cardinfo) is False:
                 return render_template('duplicate_user.html', error='Email Already Registered as User')
             else:
                 Client.register(name=name, email=email, password=password, usertype='client', userinfo=cardinfo)
@@ -107,8 +112,7 @@ def register_user():
                 return render_template('client_profile.html', email=email, name=name, meetings=meetings)
     return render_template('registration_error.html', error='Invalid registration')
 
-    
-    
+
 ####### LOGIN EXISTING USER METHODS #########
 # create session for logged in user -> admin_profile.html
 @app.route('/admin/login', methods=['POST', 'GET'])
@@ -124,17 +128,23 @@ def admin_login():
         if Admin.login_valid(email=email, password=password):
             # check on admincode code verification HERE
             if admincode == '11111':
-                # start session in user.py class
+                # start session in admin.py class
                 Admin.login(email)
                 # return name data from user profile
                 user = Admin.get_by_email(email)
-                #meetings = Meeting.get_by_email(email)
-                #print(user.userinfo[0]) prints '1' for the first digit in 11111
+                # meetings = Meeting.get_by_email(email)
+                # print(user.userinfo[0]) prints '1' for the first digit in 11111
                 if user.usertype == 'admin':
                     # send user to profile page...also can send any information needed including user email
-                    return make_response(back_to_profile())
-                    #return render_template('admin_profile.html', email=session['email'], name=user.name, user=user, meetings=meetings)
-    return render_template('login_error.html', error='NOT ALLOWED!')
+                    #return make_response(back_to_profile())
+                    meeting = Meeting.get_by_email(session['email'])
+                    if meeting is not None:
+                        return render_template('admin_profile.html', email=session['email'], name=user.name, user=user, meetings=meeting)
+                    else:
+                        meeting = []
+                        return render_template('admin_profile.html', email=session['email'], name=user.name, user=user, meetings=meeting)
+    return render_template('login_error.html', error='Try Again!')
+
 
 # create session for logged in user -> client_profile.html
 @app.route('/client/login', methods=['POST', 'GET'])
@@ -144,19 +154,23 @@ def client_login():
     password = request.form['password']
 
     if request.method == 'POST':
-            # if login_valid method in user.py class returns TRUE
+        # if login_valid method in user.py class returns TRUE
         if Client.login_valid(email=email, password=password):
             Client.login(email)
             user = Client.get_by_email(email)
-            #meetings = Meeting.get_by_email(email)
-            #print(user.usertype)
+            # meetings = Meeting.get_by_email(email)
+            # print(user.usertype)
             if user.usertype == 'client':
-                return make_response(back_to_profile())
-                #return render_template('client_profile.html', email=session['email'], name=user.name, user=user, meetings=meetings)
-    return render_template('login_error.html', error='NOT ALLOWED!')
+                meeting = Meeting.get_by_email(session['email'])
+                if meeting is not None:
+                    return render_template('client_profile.html', email=session['email'], name=user.name, user=user,
+                                           meetings=meeting)
+                else:
+                    meeting = []
+                    return render_template('client_profile.html', email=session['email'], name=user.name, user=user,
+                                           meetings=meeting)
+    return render_template('login_error.html', error='Try Again!')
 
-                
-            
 ####### BACK TO MENU LINK METHODS #########
 # link to profile... user must be logged in
 @app.route('/back_to_profile')
@@ -172,9 +186,8 @@ def back_to_profile():
         elif user.check_if_admin():
             return render_template('admin_profile.html', email=session['email'], name=user.name, meetings=meetings)
         else:
-            print("error")
+            return render_template('login_error.html', error='Invalid Request')
     return render_template('login_error.html', error='Invalid Request')
-
 
 
 ########### CREATE MEETING METHODS
@@ -186,10 +199,9 @@ def new_meeting():
 # /<string:workout_id>
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
-
     if request.method == 'POST':
         email = session['email']
-        
+
         day = request.form['day']
         time = request.form['time']
         p1 = request.form['p1']
@@ -202,7 +214,6 @@ def create_meeting():
         p8 = request.form['p8']
         p9 = request.form['p9']
         p10 = request.form['p10']
-
 
         member_emails = {
             'p1': p1,
@@ -219,14 +230,17 @@ def create_meeting():
         meeting = Meeting(day=day, time=time, email=email, members=member_emails)
         if meeting.isAvailable(day, time):
             meeting.save_to_mongo()
-            return make_response( back_to_profile() )
+            return make_response(back_to_profile())
     return render_template('create_meeting_error.html', error="Meeting Log Error")
 
-@app.route('/delete_one/<string:meeting_id>')
+
+@app.route('/delete_one/<string:meeting_id>', methods=['POST', 'GET'])
 def delete_one(meeting_id):
     meeting = Meeting.from_mongo(meeting_id)
     meeting.delete_meeting(meeting_id)
     return make_response(back_to_profile())
+
+
 
 
       ########## App Run() METHOD #############
