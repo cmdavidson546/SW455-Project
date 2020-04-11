@@ -121,7 +121,6 @@ def admin_login():
     email = request.form['email']
     password = request.form['password']
     admincode = request.form['admincode']
-
     # if POST used properly passed through Ajax created form in process_login.js .done() function
     if request.method == 'POST':
         # if login_valid method in user.py class returns TRUE
@@ -130,20 +129,8 @@ def admin_login():
             if admincode == '11111':
                 # start session in admin.py class
                 Admin.login(email)
-                # return name data from user profile
-                user = Admin.get_by_email(email)
-                # meetings = Meeting.get_by_email(email)
-                # print(user.userinfo[0]) prints '1' for the first digit in 11111
-                if user.usertype == 'admin':
-                    # send user to profile page...also can send any information needed including user email
-                    #return make_response(back_to_profile())
-                    meeting = Meeting.get_by_email(session['email'])
-                    if meeting is not None:
-                        return render_template('admin_profile.html', email=session['email'], name=user.name, user=user, meetings=meeting)
-                    else:
-                        meeting = []
-                        return render_template('admin_profile.html', email=session['email'], name=user.name, user=user, meetings=meeting)
-    return render_template('login_error.html', error='Try Again!')
+                return render_template('admin_profile.html', email=session['email'])
+    return render_template('login_error.html', error='The email or password credentials do not match.')
 
 
 # create session for logged in user -> client_profile.html
@@ -152,24 +139,12 @@ def client_login():
     # get email and password : IN OTHER ITERATIONS WE CAN GET POST from hidden ajax login form
     email = request.form['email']
     password = request.form['password']
-
     if request.method == 'POST':
-        # if login_valid method in user.py class returns TRUE
         if Client.login_valid(email=email, password=password):
             Client.login(email)
-            user = Client.get_by_email(email)
-            # meetings = Meeting.get_by_email(email)
-            # print(user.usertype)
-            if user.usertype == 'client':
-                meeting = Meeting.get_by_email(session['email'])
-                if meeting is not None:
-                    return render_template('client_profile.html', email=session['email'], name=user.name, user=user,
-                                           meetings=meeting)
-                else:
-                    meeting = []
-                    return render_template('client_profile.html', email=session['email'], name=user.name, user=user,
-                                           meetings=meeting)
-    return render_template('login_error.html', error='Try Again!')
+            return render_template('client_profile.html', email=session['email'])
+    return render_template('login_error.html', error='The email or password credentials do not match.')
+
 
 ####### FORGOT PASSWORD DIRECTION #########
 # link to profile... user must be logged in
@@ -248,7 +223,17 @@ def delete_one(meeting_id):
     meeting.delete_meeting(meeting_id)
     return make_response(back_to_profile())
 
-
+   ########## Display Meetings #############
+@app.route('/meetings-participation')
+def get_meetings():
+    if session['email'] is not None:
+        user = User.get_by_email(session['email'])
+        if Meeting.get_by_email(session['email']) is not None:
+            meetings = Meeting.get_by_email(session['email'])
+        else:
+            meetings = []
+        return render_template('meetings-participation.html', email=session['email'], name=user.name, meetings=meetings)
+    return make_response(back_to_profile())
 
 
       ########## App Run() METHOD #############
