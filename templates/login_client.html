@@ -2,7 +2,7 @@
         <div>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/login">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/login">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/register">Register</a>
@@ -20,25 +20,27 @@
     <form id="login-form" action="/client/login" method="post">
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="text" id="email" class="form-control" name="email" placeholder="e.g., test@test.com" value="" required>
+            <input type="text" id="email" class="form-control" name="email" placeholder="e.g., test@test.com" value="test@test.com" required>
         </div>
                       <div class="invalid-feedback">
                 Please provide a valid email.
                 </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" value="" required>
+            <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" value="123" required>
         </div>
-                      <div class="invalid-feedback">
-                Please provide a valid password.
-                </div>
-        <button type="submit" class="btn btn-outline-primary">Log in</button>
-        <a class="btn btn-outline-dark" href="/register" role="button">Register New User</a>
+        <div class="invalid-feedback">Please provide a valid password.</div>
+        <div class="form-group row">
+            <div class="col-6"><button type="submit" class="btn btn-outline-primary">Log in</button></div>
+            <div class="col-6"><a href="/pages-forgot-password">Forgot Password?</a></div>
+        </div>
+
     </form>
+
 
 </div>
 {% endblock %}
-    
+
              <!-- BUILT IN JS ALERT SYSTEM SCRIPTING HERE  -->
 <script>
 // Example starter JavaScript for disabling form submissions if there are invalid fields

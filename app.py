@@ -24,7 +24,7 @@ def open_app():
 
 
 
-    ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
+####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
 
 
 @app.route('/auth/user_type', methods=['POST', 'GET'])
@@ -171,6 +171,13 @@ def client_login():
                                            meetings=meeting)
     return render_template('login_error.html', error='Try Again!')
 
+####### FORGOT PASSWORD DIRECTION #########
+# link to profile... user must be logged in
+@app.route('/pages-forgot-password')
+def forgot_password():
+    return render_template('pages-forgot-password.html')
+
+
 ####### BACK TO MENU LINK METHODS #########
 # link to profile... user must be logged in
 @app.route('/back_to_profile')
@@ -194,6 +201,7 @@ def back_to_profile():
 @app.route('/auth/newmeeting', methods=['POST', 'GET'])
 def new_meeting():
     return render_template('create_meeting.html')
+
 
 
 # /<string:workout_id>

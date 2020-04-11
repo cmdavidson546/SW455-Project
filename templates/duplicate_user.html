@@ -2,7 +2,7 @@
         <div>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/login">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/login">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/register">Register</a>
@@ -11,12 +11,24 @@
         </div>
     </nav>
 
+
 {% extends "index.html" %}
 
 {% block content %}
-    <div class="container page-form">
-        <h1>Duplicate Registration</h1>
-        <h4>{{ error }}</h4>
-        <a class="btn btn-outline-primary" href="/login" role="button">Try Again</a>
+
+<div class="container page-form">
+    <div class="main-content container-fluid">
+
+        <div class="card card-border-color card-border-color-primary">
+
+            <div class="card-header">Registration Error</div>
+
+            <div class="card-body">
+                <p>{{ error }}</p>
+                <a href='/register' class="btn btn-primary" role="button">Try Again</a>
+            </div>
+        </div>
+
     </div>
+</div>
 {% endblock %}
