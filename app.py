@@ -320,7 +320,59 @@ def dict_compare(d1, d2):
     return modified
 
 
+#################### EDIT PROFILE  ####################################
+#####################################################################
+@app.route('/edit/profile')
+def send_to_edit_profile():
+    user = User.get_by_email(session['email'])
+    name = user.name.split(',')
+    firstName = name[1]
+    lastName = name[0]
+    cardname = user.userinfo['cardname']
+    cardnumber = user.userinfo['cardnumber']
+    cardcode = user.userinfo['cardcode']
+    zipcode = user.userinfo['zipcode']
+    return render_template('edit_profile.html', user=user, firstName=firstName, lastName=lastName, cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
 
+@app.route('/auth/edit_profile', methods=['POST'])
+def edit_profile():
+
+    fname = request.form['fname']
+    lname = request.form['lname']
+
+    email = request.form['email']
+    password = request.form['password']
+
+    cardname = request.form['cardname']
+    cardnumber = request.form['cardnumber']
+    cardcode = request.form['cardcode']
+    zipcode = request.form['zipcode']
+
+    name = lname + ', ' + fname
+    cardinfo = {
+        'cardname': cardname,
+        'cardnumber': cardnumber,
+        'cardcode': cardcode,
+        'zipcode': zipcode
+    }
+
+    user = User.get_by_email(session['email'])
+    if name != user.name:
+        user.update_profile(user._id, 'name', name)
+    if email != user.email:
+        user.update_profile(user._id, 'email', email)
+    if password != user.password:
+        user.update_profile(user._id, 'password', password)
+
+    items_to_update = dict_compare(user.userinfo, cardinfo)
+
+    if items_to_update is not None:
+        k = items_to_update.keys()
+        for key in k:
+            # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
+            v = items_to_update[key][1]
+            user.update_userinfo(user._id, key, v)
+    return make_response(back_to_profile())
 
 
 ########## PORT and App RUN() METHOD #############

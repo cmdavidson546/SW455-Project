@@ -39,3 +39,9 @@ class Database(object):
         query = {'_id' : searchKey}
         newdata = {'$set' : {'members.'+newKey : newVal}}
         Database.DATABASE['meeting'].update(query, newdata)
+        
+    @staticmethod
+    def update_userinfo(searchKey, newKey, newVal):
+        query = {'_id' : searchKey}
+        newdata = {'$set' : {'userinfo.'+newKey : newVal}}
+        Database.DATABASE['users'].update(query, newdata)

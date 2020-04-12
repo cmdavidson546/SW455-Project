@@ -1,0 +1,73 @@
+{% extends "index_user.html" %}
+
+{% block content %}
+
+<div class="container page-form">
+    <h1>Edit Profile</h1>
+
+  <div class="form-row">
+
+    <!-- BEGIN FORM HERE -->
+    <form id="register-form" action="/auth/edit_profile" method="post">
+
+        <div class="form-row">
+            <div class="col-md-12 mb-2">
+                <label for="fname">First name</label>
+                <input type="text" class="form-control" id="fname" name="fname" placeholder="enter First name" value="{{ firstName }}">
+            </div>
+
+            <div class="col-md-12 mb-2">
+                <label for="lname">Last name</label>
+                <input type="text" class="form-control" id="lname" name="lname" placeholder="enter Last name" value="{{ lastName }}" >
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-12 mb-2">
+                <label for="email">Company Email</label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="enter name@company email" value="{{ user.email }}" >
+            </div>
+
+            <div class="col-md-10 mb-2">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="8-10 characters" value="{{ user.password}}">
+            </div>
+        </div>
+        <hr>
+        <div class="form-row">
+            <h3>Credit Card Information</h3>
+        </div>
+        <div class="form-row" id="creditcard">
+          <div class="form-row">
+              <div class="col-md-12 mb-1">
+              <label for="cardname">Name on Card</label>
+              <input type="text" class="form-control" id="cardname" name="cardname" placeholder="Name as it appears on card" value="{{cardname}}">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-md-12 mb-1">
+              <label for="cardnumber">Credit Card Number</label>
+              <input type="password" class="form-control" id="cardnumber" name="cardnumber" placeholder="XXXX XXXX XXXX XXXX" value="{{cardnumber}}">
+            </div>
+          </div>
+
+        <div class="form-row">
+               <div class="col-md-3 mb-2">
+                    <label for="cardcode">Security Code</label>
+                    <input type="password" class="form-control" id="cardcode" name="cardcode" placeholder="123" value="{{cardcode}}">
+              </div>
+              <div class="col-md-3 mb-2">
+                 <label for="zipcode">Zip Code</label>
+                <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="XXXXX" value="{{zipcode}}">
+              </div>
+          </div>
+    </div>
+        <hr>
+        <button class="btn btn-outline-primary" type="submit">Submit Changes</button>
+    </form>
+</div>
+
+
+
+{% endblock %}

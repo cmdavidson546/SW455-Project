@@ -68,3 +68,17 @@ class User(object):
     # GET MEETINGS FOR ONES USER CREATED
     def get_meetings(self):
         return Meeting.get_by_email(self.email)
+    
+        # EDIT PROFILE
+    # Here I am setting a flag to return 0 for not updated and 1 for update successful
+    @classmethod
+    def update_profile(cls, user_id, newKey, newVal):
+        if user_id is not None:
+            Database.update_one('users', user_id, newKey, newVal)
+            return 1
+        return 0
+
+    @classmethod
+    def update_userinfo(cls, user_id, newKey, newVal):
+        if user_id is not None:
+            Database.update_userinfo(user_id, newKey, newVal)
