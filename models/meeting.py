@@ -38,14 +38,9 @@ class Meeting(object):
         meeting = Database.find_one('meeting', {'_id': id})
         return cls(**meeting)
 
-    # search by admin email
-    # this does not work with returning pymongo cursor (e.g., 'for d in d for x in x:' )
-    # which returns error: TypeError: type object argument after ** must be a mapping, not Cursor
+    # search by email: returns pymongo cursor
     @classmethod
     def get_by_email(cls, email):
-        #data = Database.find('meeting', {'email': email})
-        #return cls(**data)
-        # ADD SORT TO DATABASE.py:  then add to this func: cls.sort({'email': email}
         return [meeting for meeting in Database.find(collection='meeting', query={'email': email})]
 
     @classmethod
@@ -82,3 +77,20 @@ class Meeting(object):
     @classmethod
     def delete_meeting(cls, meeting_id):
         Database.remove_one(collection='meeting', searchVal=meeting_id)
+    
+    # EDIT MEETING METHOD
+    # Here I am setting a flag to return 0 for not updated and 1 for update successful
+    @classmethod
+    def update_meeting(cls, meeting_id, newKey, newVal):
+        if meeting_id is not None:
+            Database.update_one('meeting', meeting_id, newKey, newVal)
+            return 1
+        return 0
+
+    # UPDATE MEMBERS OF MEETING
+    @classmethod
+    def update_members(cls, meeting_id, newKey, newVal):
+        if meeting_id is not None:
+            Database.update_member(meeting_id, newKey, newVal)
+            return 1
+        return 0

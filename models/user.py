@@ -63,3 +63,8 @@ class User(object):
     @staticmethod
     def logout():
         session['email'] = None
+
+        
+    # GET MEETINGS FOR ONES USER CREATED
+    def get_meetings(self):
+        return Meeting.get_by_email(self.email)

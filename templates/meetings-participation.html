@@ -17,7 +17,8 @@
             <tr>
               <th>Meeting Day</th>
                 <th>Meeting Time</th>
-                <th>Meeting Admin</th>
+                <th>Meeting Creator</th>
+                <th>Edit Meeting</th>
                 <th>Delete Meeting</th>
             </tr>
           </thead>
@@ -30,20 +31,25 @@
                     <td> {{ meeting.day }} </td>
                      <td> {{ meeting.time }} </td>
                     <td> {{ meeting.email }} </td>
+                    <td><a class="nav-link" href="/edit_one/{{ meeting._id }}">Edit Meeting</a></td>
                     <td><a class="nav-link" href="/delete_one/{{ meeting._id }}">Delete Meeting</a></td>
                   <!--   <td><a class="nav-link" href="#">Contact Members</a></td>
                   <td><a class="nav-link" href="#">Edit Meeting</a></td>
                    -->
             </tr>
-
+            <tr><td>
+                Meeting Participants:
                  {% for person in meeting.members %}
                     {% if meeting.members[person] != "" %}
-                    <tr>
-                      <td> {{ meeting.members[person] }}</td>
-                    </tr>
+
+                      "{{ meeting.members[person] }}"
+
                     {% endif %}
                   {% endfor %}
-             {% endfor %}
+
+              </td></tr>
+
+              {% endfor %}
           {% endif %}
           </tbody>
         </table>

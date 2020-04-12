@@ -33,3 +33,9 @@ class Database(object):
     @staticmethod
     def remove_one(collection, searchVal):
         Database.DATABASE[collection].delete_one({'_id': searchVal})
+    
+    @staticmethod
+    def update_member(searchKey, newKey, newVal):
+        query = {'_id' : searchKey}
+        newdata = {'$set' : {'members.'+newKey : newVal}}
+        Database.DATABASE['meeting'].update(query, newdata)

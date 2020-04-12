@@ -23,9 +23,7 @@ def open_app():
     return render_template('user_type.html')
 
 
-
 ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
-
 
 @app.route('/auth/user_type', methods=['POST', 'GET'])
 def log_in_by_user_type():
@@ -45,7 +43,7 @@ def user_home():
     return render_template('user_type.html')
 
 
-# path to logout
+# path to logout - NEED TO SEE IF "User.logout()" is buggy for Admin and Client users
 @app.route('/auth/logout')
 def user_logout():
     User.logout()
@@ -58,7 +56,7 @@ def register_page():
     return render_template('register.html')
 
 
-########### REGISTER NEW USER METHOD ############
+########### REGISTER NEW USER ############
 # endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
@@ -113,7 +111,7 @@ def register_user():
     return render_template('registration_error.html', error='Invalid registration')
 
 
-####### LOGIN EXISTING USER METHODS #########
+####### ADMIN LOGIN #########
 # create session for logged in user -> admin_profile.html
 @app.route('/admin/login', methods=['POST', 'GET'])
 def admin_login():
@@ -133,6 +131,7 @@ def admin_login():
     return render_template('login_error.html', error='The email or password credentials do not match.')
 
 
+########### CLIENT LOGIN #############
 # create session for logged in user -> client_profile.html
 @app.route('/client/login', methods=['POST', 'GET'])
 def client_login():
@@ -172,14 +171,13 @@ def back_to_profile():
     return render_template('login_error.html', error='Invalid Request')
 
 
-########### CREATE MEETING METHODS
+########### CREATE MEETING METHODS ###########
 @app.route('/auth/newmeeting', methods=['POST', 'GET'])
 def new_meeting():
     return render_template('create_meeting.html')
 
 
-
-# /<string:workout_id>
+# CHECK IF ID IS PASSED, may need to add:  /<string:workout_id>
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
     if request.method == 'POST':
@@ -216,14 +214,15 @@ def create_meeting():
             return make_response(back_to_profile())
     return render_template('create_meeting_error.html', error="Meeting Log Error", email=session['email'])
 
-
-@app.route('/delete_one/<string:meeting_id>', methods=['POST', 'GET'])
+########## Delete Meeting  #############
+@app.route('/delete_one/<string:meeting_id>')
 def delete_one(meeting_id):
     meeting = Meeting.from_mongo(meeting_id)
     meeting.delete_meeting(meeting_id)
     return make_response(back_to_profile())
 
-   ########## Display Meetings #############
+
+########## Display Meetings #############
 @app.route('/meetings-participation')
 def get_meetings():
     if session['email'] is not None:
@@ -236,7 +235,95 @@ def get_meetings():
     return make_response(back_to_profile())
 
 
-      ########## App Run() METHOD #############
+#################### EDIT MEETING  ####################################
+# NEED TO MAKE SURE that I bring in the meeting_id in POST request here...
+#####################################################################
+@app.route('/edit_one/<string:meeting_id>')
+def goto_edit_meeting(meeting_id):
+    meeting = Meeting.from_mongo(meeting_id)
+    return render_template('edit_meeting.html', meeting=meeting)
+
+@app.route('/edit_meeting/<string:meeting_id>', methods=['POST'])
+def edit_meeting(meeting_id):
+    user = User.get_by_email(session['email'])
+    if request.method == 'POST' and user is not None:
+        # get meeting from DB
+        meeting = Meeting.from_mongo(meeting_id)
+
+        # get Updated Data from user
+        day = request.form['day']
+        time = request.form['time']
+        p1 = request.form['p1']
+        p2 = request.form['p2']
+        p3 = request.form['p3']
+        p4 = request.form['p4']
+        p5 = request.form['p5']
+        p6 = request.form['p6']
+        p7 = request.form['p7']
+        p8 = request.form['p8']
+        p9 = request.form['p9']
+        p10 = request.form['p10']
+
+        members = {
+            'p1': p1,
+            'p2': p2,
+            'p3': p3,
+            'p4': p4,
+            'p5': p5,
+            'p6': p6,
+            'p7': p7,
+            'p8': p8,
+            'p9': p9,
+            'p10': p10
+        }
+        if meeting.isAvailable(day, time):
+            if day != meeting.day:
+                meeting.update_meeting(meeting_id, 'day', day)
+            if time != meeting.time:
+                meeting.update_meeting(meeting_id, 'time', time)
+
+        # Next Compare dictionaries of user changes vs. original db
+        items_to_update = dict_compare(meeting.members, members)
+        if items_to_update is not None:
+            # meeting.update_meeting(meeting_id, key, items_to_update[key])
+            k = items_to_update.keys()
+            for key in k:
+                # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
+                v = items_to_update[key][1]
+                meeting.update_members(meeting_id, key, v)
+
+            # GETS MEETINGS ".get_by_email() method"
+        meetings = Meeting.get_by_email(session['email'])
+        return render_template('meetings-participation.html', email=session['email'], name=user.name, meetings=meetings)
+    return render_template('create_meeting_error.html', error='Could not update Meeting')
+
+def dict_compare(d1, d2):
+    # convert data to set()
+    d1_keys = set(d1.keys())
+    d2_keys = set(d2.keys())
+
+    # Set intersection() method return a set that contains the items that exist in both set a, and set b.
+    intersect_keys = d1_keys.intersection(d2_keys)
+
+    # returns dictionary of all items in d1 that are NOT in d2
+    added = d1_keys - d2_keys
+    # returns dictionary of all items in d2 that are NOT in d1
+    removed = d2_keys - d1_keys
+
+    # returns dictionary {key: value, key: value} of all items that exist in both dicts that are different
+    modified = {o: (d1[o], d2[o]) for o in intersect_keys if d1[o] != d2[o]}
+
+    # returns dictionary of all keys that exist in both dicts that are the same
+    same = set(o for o in intersect_keys if d1[o] == d2[o])
+    print(modified)
+    print(same)
+    return modified
+
+
+
+
+
+########## PORT and App RUN() METHOD #############
 
 if __name__ == '__main__':
     app.run(debug=True)
