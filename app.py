@@ -375,6 +375,13 @@ def edit_profile():
     return make_response(back_to_profile())
 
 
+########## Search By Participation ############
+@app.route('/participation-as-member')
+def participation_membership():
+    meetings = Meeting.get_members(session['email'])
+    return render_template('meetings-participation-2.html', meetings=meetings)
+
+
 ########## PORT and App RUN() METHOD #############
 
 if __name__ == '__main__':

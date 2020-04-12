@@ -94,3 +94,19 @@ class Meeting(object):
             Database.update_member(meeting_id, newKey, newVal)
             return 1
         return 0
+    
+        # GET MEMBERSHIP
+    @classmethod
+    def get_members(cls, email):
+        if email is not None:
+            list1 = [meeting for meeting in Database.find(collection='meeting', query={'members.p1': email})]
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p2': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p3': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p4': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p5': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p6': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p7': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p8': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p9': email})])
+            list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p10': email})])
+            return list1
