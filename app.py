@@ -2,7 +2,9 @@ __author__ = "christopherdavidson"
 
 from flask import Flask, render_template, request, session, jsonify, make_response
 from common.database import Database
+from common.room_matrix import RoomMatrix
 from models.meeting import Meeting
+from models.room import Room
 from models.admin import Admin
 from models.client import Client
 from models.user import User
@@ -56,7 +58,7 @@ def register_page():
     return render_template('register.html')
 
 
-########### REGISTER NEW USER ############
+########### REGISTER NEW USER METHOD ############
 # endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
@@ -111,7 +113,7 @@ def register_user():
     return render_template('registration_error.html', error='Invalid registration')
 
 
-####### ADMIN LOGIN #########
+####### LOGIN EXISTING USER METHODS #########
 # create session for logged in user -> admin_profile.html
 @app.route('/admin/login', methods=['POST', 'GET'])
 def admin_login():
@@ -131,7 +133,6 @@ def admin_login():
     return render_template('login_error.html', error='The email or password credentials do not match.')
 
 
-########### CLIENT LOGIN #############
 # create session for logged in user -> client_profile.html
 @app.route('/client/login', methods=['POST', 'GET'])
 def client_login():
@@ -144,13 +145,11 @@ def client_login():
             return render_template('client_profile.html', email=session['email'])
     return render_template('login_error.html', error='The email or password credentials do not match.')
 
-
 ####### FORGOT PASSWORD DIRECTION #########
 # link to profile... user must be logged in
 @app.route('/pages-forgot-password')
 def forgot_password():
     return render_template('pages-forgot-password.html')
-
 
 ####### BACK TO MENU LINK METHODS #########
 # link to profile... user must be logged in
@@ -171,13 +170,15 @@ def back_to_profile():
     return render_template('login_error.html', error='Invalid Request')
 
 
-########### CREATE MEETING METHODS ###########
+########### CREATE MEETING METHODS
 @app.route('/auth/newmeeting', methods=['POST', 'GET'])
 def new_meeting():
     return render_template('create_meeting.html')
 
-
-# CHECK IF ID IS PASSED, may need to add:  /<string:workout_id>
+# BUG:  Cannot create a meeting for MON, 9AM.
+# Always returns duplicate meeting error
+#
+# /<string:workout_id>
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
     if request.method == 'POST':
@@ -208,11 +209,17 @@ def create_meeting():
             'p9': p9,
             'p10': p10
         }
+
+        rooms = RoomMatrix.get_rooms()
+        room = Room.get_from_mongo(rooms[0]['room_id'])
+
         meeting = Meeting(day=day, time=time, email=email, members=member_emails)
         if meeting.isAvailable(day, time):
+            room.update_meetings(room._id, day + time, meeting._id)
             meeting.save_to_mongo()
             return make_response(back_to_profile())
-    return render_template('create_meeting_error.html', error="Meeting Log Error", email=session['email'])
+
+    return render_template('create_meeting_error.html', error="Meeting Day-Time already taken", email=session['email'])
 
 ########## Delete Meeting  #############
 @app.route('/delete_one/<string:meeting_id>')
@@ -236,7 +243,6 @@ def get_meetings():
 
 
 #################### EDIT MEETING  ####################################
-# NEED TO MAKE SURE that I bring in the meeting_id in POST request here...
 #####################################################################
 @app.route('/edit_one/<string:meeting_id>')
 def goto_edit_meeting(meeting_id):
@@ -284,6 +290,8 @@ def edit_meeting(meeting_id):
 
         # Next Compare dictionaries of user changes vs. original db
         items_to_update = dict_compare(meeting.members, members)
+        #print(items_to_update)
+
         if items_to_update is not None:
             # meeting.update_meeting(meeting_id, key, items_to_update[key])
             k = items_to_update.keys()
@@ -315,10 +323,9 @@ def dict_compare(d1, d2):
 
     # returns dictionary of all keys that exist in both dicts that are the same
     same = set(o for o in intersect_keys if d1[o] == d2[o])
-    print(modified)
-    print(same)
+    #print(modified)
+    #print(same)
     return modified
-
 
 #################### EDIT PROFILE  ####################################
 #####################################################################
@@ -374,12 +381,36 @@ def edit_profile():
             user.update_userinfo(user._id, key, v)
     return make_response(back_to_profile())
 
-
 ########## Search By Participation ############
 @app.route('/participation-as-member')
 def participation_membership():
     meetings = Meeting.get_members(session['email'])
     return render_template('meetings-participation-2.html', meetings=meetings)
+
+
+@app.route('/add_room')
+def add_rooms():
+    newRoom = RoomMatrix()
+    # create room returns room _id
+    room_id = newRoom.create_room()
+    return render_template('add-room-success.html')
+
+@app.route('/view_rooms')
+def view_rooms():
+    rooms = RoomMatrix.get_rooms()
+    return render_template('view-avail-rooms.html', rooms=rooms)
+
+@app.route('/delete_room')
+def delete_room_redirect():
+    rooms = RoomMatrix.get_rooms()
+    return render_template('view-avail-rooms.html', rooms=rooms)
+
+# DOES NOT WORK YET...error returning **class object from delete_room()
+# <string:meeting_id>', methods=['POST']
+@app.route('/delete_room/<string:office_id>')
+def delete_room(office_id):
+    RoomMatrix.delete_room(office_id=office_id)
+    return make_response(back_to_profile())
 
 
 ########## PORT and App RUN() METHOD #############
