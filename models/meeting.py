@@ -2,7 +2,9 @@ __author__ = "christopherdavidson"
 
 import uuid
 import datetime
+
 from flask import session
+
 from common.database import Database
 
 """
@@ -10,7 +12,10 @@ This MSS keeps track of meetings schedule and which people are in what meeting i
 The application is not required to perform scheduling.
 """
 
+# NEED TO ADD ROOM CLASS OBJECT INSTANCE TO EACH MEETING
 class Meeting(object):
+
+    # CONSTRUCTOR
     def __init__(self, day, time, email, members, created_date=datetime.datetime.today(), _id=None):
         self.day = day
         self.time = time
@@ -19,6 +24,7 @@ class Meeting(object):
         self.created_date = created_date
         self._id = uuid.uuid4().hex if _id is None else _id
 
+    # STORED DATA IN MEETING CLASS
     def json(self):
         return {
             'day': self.day,
@@ -29,20 +35,19 @@ class Meeting(object):
             'created_date': self.created_date
         }
 
+    # SAVE MEETINGS TO DB
     def save_to_mongo(self):
         Database.insert(collection='meeting', data=self.json())
 
-    # return class object rather than pymongo cursor
+    # FIND ONE BY MEETING ID
+    # return **class object rather than pymongo cursor
     @classmethod
     def from_mongo(cls, id):
         meeting = Database.find_one('meeting', {'_id': id})
         return cls(**meeting)
 
-    # search by email: returns pymongo cursor
-    @classmethod
-    def get_by_email(cls, email):
-        return [meeting for meeting in Database.find(collection='meeting', query={'email': email})]
 
+    # TIME CONFLICT CHECK FOR SCHEDULING NEW MEETING
     @classmethod
     def isAvailable(cls, day, time):
         data = Database.find_one(collection='meeting', query={'day': day})
@@ -59,6 +64,16 @@ class Meeting(object):
                     return False
         return True
 
+    # FIND MANY BY USER EMAIL
+    @classmethod
+    def get_by_email(cls, email):
+        #data = Database.find('meeting', {'email': email})
+        #return cls(**data)
+        # ADD SORT TO DATABASE.py:  then add to this func: cls.sort({'email': email}
+        return [meeting for meeting in Database.find(collection='meeting', query={'email': email})]
+
+
+    # REGISTER NEW MEETING
     @classmethod
     def register(cls, day, time, email, members):
         # check if user has already registered email
@@ -74,10 +89,12 @@ class Meeting(object):
         else:
             return False
 
+    # DELETE MEETING
     @classmethod
     def delete_meeting(cls, meeting_id):
         Database.remove_one(collection='meeting', searchVal=meeting_id)
-    
+
+
     # EDIT MEETING METHOD
     # Here I am setting a flag to return 0 for not updated and 1 for update successful
     @classmethod
@@ -94,8 +111,8 @@ class Meeting(object):
             Database.update_member(meeting_id, newKey, newVal)
             return 1
         return 0
-    
-        # GET MEMBERSHIP
+
+    # GET MEMBERSHIP
     @classmethod
     def get_members(cls, email):
         if email is not None:

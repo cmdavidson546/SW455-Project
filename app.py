@@ -26,6 +26,7 @@ def open_app():
 
 
 ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
+##################################################################
 
 @app.route('/auth/user_type', methods=['POST', 'GET'])
 def log_in_by_user_type():
@@ -38,12 +39,10 @@ def log_in_by_user_type():
         return render_template('register.html')
     return render_template('user_type.html')
 
-
 # set route path to login
 @app.route('/login')
 def user_home():
     return render_template('user_type.html')
-
 
 # path to logout - NEED TO SEE IF "User.logout()" is buggy for Admin and Client users
 @app.route('/auth/logout')
@@ -51,12 +50,10 @@ def user_logout():
     User.logout()
     return render_template('user_type.html')
 
-
 # route to register page
 @app.route('/register')
 def register_page():
     return render_template('register.html')
-
 
 ########### REGISTER NEW USER METHOD ############
 # endpoint from main registration form  -> client_profile.html
@@ -112,7 +109,6 @@ def register_user():
                 return render_template('client_profile.html', email=email, name=name, meetings=meetings)
     return render_template('registration_error.html', error='Invalid registration')
 
-
 ####### LOGIN EXISTING USER METHODS #########
 # create session for logged in user -> admin_profile.html
 @app.route('/admin/login', methods=['POST', 'GET'])
@@ -131,7 +127,6 @@ def admin_login():
                 Admin.login(email)
                 return render_template('admin_profile.html', email=session['email'])
     return render_template('login_error.html', error='The email or password credentials do not match.')
-
 
 # create session for logged in user -> client_profile.html
 @app.route('/client/login', methods=['POST', 'GET'])
@@ -168,7 +163,6 @@ def back_to_profile():
         else:
             return render_template('login_error.html', error='Invalid Request')
     return render_template('login_error.html', error='Invalid Request')
-
 
 ########### CREATE MEETING METHODS
 @app.route('/auth/newmeeting', methods=['POST', 'GET'])
@@ -212,13 +206,11 @@ def create_meeting():
 
         rooms = RoomMatrix.get_rooms()
         room = Room.get_from_mongo(rooms[0]['room_id'])
-
         meeting = Meeting(day=day, time=time, email=email, members=member_emails)
         if meeting.isAvailable(day, time):
             room.update_meetings(room._id, day + time, meeting._id)
             meeting.save_to_mongo()
             return make_response(back_to_profile())
-
     return render_template('create_meeting_error.html', error="Meeting Day-Time already taken", email=session['email'])
 
 ########## Delete Meeting  #############
@@ -227,7 +219,6 @@ def delete_one(meeting_id):
     meeting = Meeting.from_mongo(meeting_id)
     meeting.delete_meeting(meeting_id)
     return make_response(back_to_profile())
-
 
 ########## Display Meetings #############
 @app.route('/meetings-participation')
@@ -241,9 +232,7 @@ def get_meetings():
         return render_template('meetings-participation.html', email=session['email'], name=user.name, meetings=meetings)
     return make_response(back_to_profile())
 
-
-#################### EDIT MEETING  ####################################
-#####################################################################
+############# EDIT MEETING  ###################
 @app.route('/edit_one/<string:meeting_id>')
 def goto_edit_meeting(meeting_id):
     meeting = Meeting.from_mongo(meeting_id)
@@ -327,8 +316,7 @@ def dict_compare(d1, d2):
     #print(same)
     return modified
 
-#################### EDIT PROFILE  ####################################
-#####################################################################
+####### EDIT PROFILE  ###########
 @app.route('/edit/profile')
 def send_to_edit_profile():
     user = User.get_by_email(session['email'])
@@ -405,12 +393,13 @@ def delete_room_redirect():
     rooms = RoomMatrix.get_rooms()
     return render_template('view-avail-rooms.html', rooms=rooms)
 
-# DOES NOT WORK YET...error returning **class object from delete_room()
 # <string:meeting_id>', methods=['POST']
 @app.route('/delete_room/<string:office_id>')
 def delete_room(office_id):
-    RoomMatrix.delete_room(office_id=office_id)
+    room_id = RoomMatrix.get_by_id(office_id)
+    RoomMatrix.delete_room(office_id, room_id)
     return make_response(back_to_profile())
+
 
 
 ########## PORT and App RUN() METHOD #############

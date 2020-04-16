@@ -20,6 +20,9 @@ class Room(object):
     def save_to_mongo(self):
         Database.insert(collection='room', data=self.json())
 
+    @classmethod
+    def delete_room_base(cls, room_id):
+        Database.remove_one(collection='room', searchVal=room_id)
 
     @classmethod
     def get_from_mongo(cls, id):
