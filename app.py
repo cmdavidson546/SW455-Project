@@ -10,6 +10,7 @@ from models.client import Client
 from models.user import User
 import os
 import re
+import random
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
