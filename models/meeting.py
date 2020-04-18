@@ -46,6 +46,11 @@ class Meeting(object):
         meeting = Database.find_one('meeting', {'_id': id})
         return cls(**meeting)
 
+    @classmethod
+    def get_all_meetings(cls):
+        meetings = Database.find(collection='meeting', query=None)
+        #return [cls(**meetings) for meeting in meetings]
+        return [meeting for meeting in Database.find(collection='meeting', query=None)]
 
     # TIME CONFLICT CHECK FOR SCHEDULING NEW MEETING
     @classmethod
@@ -65,6 +70,8 @@ class Meeting(object):
         return True
 
     # FIND MANY BY USER EMAIL
+    # this does not work with returning pymongo cursor (e.g., 'for d in d for x in x:' )
+    # which returns error: TypeError: type object argument after ** must be a mapping, not Cursor
     @classmethod
     def get_by_email(cls, email):
         #data = Database.find('meeting', {'email': email})

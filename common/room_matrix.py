@@ -44,8 +44,9 @@ class RoomMatrix(object):
     @classmethod
     def delete_room(cls, office_id, room_id=None):
         if room_id is not None:
-            if RoomMatrix.counter > 0:
-                RoomMatrix.counter -= 1
+            RoomMatrix.counter -= 1
             room = Room.get_from_mongo(room_id)
             room.delete_room_base(room_id)
         Database.remove_one(collection='office', searchVal=office_id)
+
+

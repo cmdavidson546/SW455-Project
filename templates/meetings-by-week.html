@@ -9,41 +9,34 @@
 
       </div>
 
+
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th>Meeting Day</th>
-                <th>Meeting Time</th>
+              <th>Day</th>
+                <th>Time</th>
                 <th>Meeting Creator</th>
-                <th>Edit Meeting</th>
-                <th>Delete Meeting</th>
             </tr>
           </thead>
 
           <tbody>
 
-              {% if meetings[0]|length > 0 %}
+              {% if meetings[0] | length > 0 %}
                 {% for meeting in meetings %}
               <tr style="background:#bfc1c9;">
                     <td> {{ meeting.day }} </td>
                      <td> {{ meeting.time }} </td>
-                    <td> {{ meeting.email }} </td>
-                    <td><a class="nav-link" href="/edit_one/{{ meeting._id }}">Edit Meeting</a></td>
-                    <td><a class="nav-link" href="/delete_one/{{ meeting._id }}">Delete Meeting</a></td>
+                  <td> {{meeting.email}} </td>
             </tr>
             <tr><td>
                 Meeting Participants:
                  {% for person in meeting.members %}
                     {% if meeting.members[person] != "" %}
-
                       "{{ meeting.members[person] }}"
-
                     {% endif %}
                   {% endfor %}
-
               </td></tr>
-
               {% endfor %}
           {% endif %}
           </tbody>

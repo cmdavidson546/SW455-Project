@@ -54,3 +54,11 @@ class Database(object):
         query = {'_id' : searchKey}
         newdata = {'$set' : {'meetings.'+newKey : newVal}}
         Database.DATABASE['room'].update(query, newdata)
+
+
+    # replace one: db.test.replace_one({'x': 1}, {'y': 1})
+    @staticmethod
+    def erase_replace_meeting_from_room(room_id, newKey, newVal=None):
+        query = {'_id' : room_id}
+        newdata = {'$set' : {'meetings.'+newKey : newVal} }
+        Database.DATABASE['room'].update(query, newdata)

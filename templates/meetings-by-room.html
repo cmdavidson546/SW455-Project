@@ -1,0 +1,49 @@
+{% extends "index_user.html" %}
+
+{% block content %}
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+
+
+      </div>
+
+
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Room Number</th>
+                <th>Room ID</th>
+                <th>Edit Meeting</th>
+                <th>Delete Meeting</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+              {% if rooms[0]|length > 0 %}
+                {% for room in rooms %}
+              <tr style="background:#bfc1c9;">
+                    <td> {{ room.room }} </td>
+                     <td> {{ room.room_id }} </td>
+                  <td> BLANK </td>
+                  <td>BLANK</td>
+            </tr>
+            <tr><td>
+                Meetings:
+                 {% for meeting in meetings %}
+                      "{{ meeting }}"
+                  {% endfor %}
+
+              </td></tr>
+
+              {% endfor %}
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+{% endblock %}

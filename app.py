@@ -204,9 +204,21 @@ def create_meeting():
             'p10': p10
         }
 
+        # get all available rooms in DB
         rooms = RoomMatrix.get_rooms()
-        room = Room.get_from_mongo(rooms[0]['room_id'])
+        print(len(rooms))
+        # gets random room number to assign new meetings
+        # ultimately need to add ability to change
+        # between available rooms as a choice for user
+        random.random()
+        # random.randint selects (start, end) with both ends inclusive
+        r_int = random.randint(0, (len(rooms)-1))
+        room = Room.get_from_mongo(rooms[r_int]['room_id'])
+
+        # create the meeeting
         meeting = Meeting(day=day, time=time, email=email, members=member_emails)
+
+        # if meeting day/time available, update room list of meetings and save meeting to DB
         if meeting.isAvailable(day, time):
             room.update_meetings(room._id, day + time, meeting._id)
             meeting.save_to_mongo()
@@ -216,7 +228,36 @@ def create_meeting():
 ########## Delete Meeting  #############
 @app.route('/delete_one/<string:meeting_id>')
 def delete_one(meeting_id):
+    # need day and time of meeting
     meeting = Meeting.from_mongo(meeting_id)
+    day = meeting.day
+    time = meeting.time
+    searchKey = day+time
+
+    # find rooms with the given meeting_id in the 'meetings.**' field
+    # to delete them from 'room' collection
+    # .get_rooms() returns a dict() object which must be access like a python dict().
+    # room_id is accessed as room['room_id'] but not room.room_id (class access)
+    rooms = RoomMatrix.get_rooms()
+    for room in rooms:
+        print(room['room'])
+        print(room['room_id'])
+
+    # search rooms by a meeting_id; if search returns True
+    if Room.find_by_meeting(searchKey=searchKey, meeting_id=meeting_id):
+        room_object = Room.find_by_meeting(searchKey=searchKey, meeting_id=meeting_id)
+
+        # returns a room() object that has the meeting
+        print(room_object)
+        # returning a room object we can access the room_id that contains the meeting
+        print(room_object._id)
+
+
+    # update the room using _id to erase the meeting from the existing meeting. list
+        Room.erase_meeting(room_id=room_object._id, searchKey=searchKey)
+
+
+    # delete the meeting from 'meetings' collection and return to profile dashboard
     meeting.delete_meeting(meeting_id)
     return make_response(back_to_profile())
 
@@ -229,7 +270,7 @@ def get_meetings():
             meetings = Meeting.get_by_email(session['email'])
         else:
             meetings = []
-        return render_template('meetings-participation.html', email=session['email'], name=user.name, meetings=meetings)
+        return render_template('meetings-by-creator.html', email=session['email'], name=user.name, meetings=meetings)
     return make_response(back_to_profile())
 
 ############# EDIT MEETING  ###################
@@ -291,7 +332,7 @@ def edit_meeting(meeting_id):
 
             # GETS MEETINGS ".get_by_email() method"
         meetings = Meeting.get_by_email(session['email'])
-        return render_template('meetings-participation.html', email=session['email'], name=user.name, meetings=meetings)
+        return render_template('meetings-by-creator.html', email=session['email'], name=user.name, meetings=meetings)
     return render_template('create_meeting_error.html', error='Could not update Meeting')
 
 def dict_compare(d1, d2):
@@ -375,7 +416,7 @@ def participation_membership():
     meetings = Meeting.get_members(session['email'])
     return render_template('meetings-participation-2.html', meetings=meetings)
 
-
+########## CREATE, EDIT, VIEW ROOMS AVAILABLE FOR MEETINGS ############
 @app.route('/add_room')
 def add_rooms():
     newRoom = RoomMatrix()
@@ -400,7 +441,42 @@ def delete_room(office_id):
     RoomMatrix.delete_room(office_id, room_id)
     return make_response(back_to_profile())
 
+########## NEW #############
+@app.route('/display_by_room')
+def display_meetings_by_room():
+    # for room number and room_id
+    # returns list type
+    rooms = RoomMatrix.get_rooms()
+    # get meetings
+    meetings = []
+    for room in rooms:
+        room_id = room['room_id']
+        # returns class
+        room_for_meetings = Room.get_from_mongo(room_id)
+        for meeting in room_for_meetings.meetings:
+            if room_for_meetings.meetings[meeting] is not None:
+                #meetings.append(room_for_meetings.meetings[meeting])
+                meetings.append(meeting)
+    #print(meetings)
+    return render_template('meetings-by-room.html', rooms=rooms, meetings=meetings)
 
+@app.route('/display_by_week')
+def display_all():
+    meetings = Meeting.get_all_meetings()
+    return render_template('meetings-by-week.html', meetings=meetings)
+
+@app.route('/display_by_day')
+def display_by_day():
+    pass
+
+@app.route('/display_by_time')
+def display_by_time():
+    pass
+
+
+@app.route('/display_by_user')
+def display_by_user():
+    pass
 
 ########## PORT and App RUN() METHOD #############
 

@@ -3,6 +3,7 @@ __author__ = "christopherdavidson"
 import uuid
 
 from common.database import Database
+from models.meeting import Meeting
 
 class Room(object):
 
@@ -27,18 +28,27 @@ class Room(object):
     @classmethod
     def get_from_mongo(cls, id):
         room = Database.find_one('room', {'_id': id})
-        return cls(**room)
+        if room is not None:
+            return cls(**room)
+        return False
 
     # UPDATE MEMBERS OF MEETING
     @classmethod
     def update_meetings(cls, room_id, newKey, newVal):
         if room_id is not None:
             Database.update_meeting(room_id, newKey, newVal)
-            return 1
-        return 0
+            return True
+        return False
+
+    ########## NEW #############
+    @classmethod
+    def find_by_meeting(cls, meeting_id, searchKey):
+        room = Database.find_one('room', {'meetings.'+searchKey: meeting_id})
+        if room is not None:
+            return cls(**room)
+        return False
 
 
-
-
-
-
+    @classmethod
+    def erase_meeting(cls, searchKey, room_id):
+        Database.erase_replace_meeting_from_room(room_id=room_id, newKey=searchKey)
