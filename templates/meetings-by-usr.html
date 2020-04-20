@@ -4,7 +4,7 @@
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+        <h1 class="h2">Meetings By User: {{ email }}</h1>
       </div>
 
 
@@ -19,8 +19,9 @@
           </thead>
 
           <tbody>
-              {% if meetings[0] | length > 0 %}
-                {% for meeting in meetings %}
+
+              {% if meetingsC[0] | length > 0 %}
+                {% for meeting in meetingsC %}
               <tr style="background:#bfc1c9;">
                     <td> {{ meeting.day }} </td>
                      <td> {{ meeting.time }} </td>
@@ -37,9 +38,31 @@
               </td></tr>
               {% endfor %}
           {% endif %}
+
+          {% if meetingsP[0] | length > 0 %}
+            {% for meeting in meetingsP %}
+              <tr style="background:#bfc1c9;">
+                    <td> {{ meeting.day }} </td>
+                     <td> {{ meeting.time }} </td>
+                  <td> {{meeting.email}} </td>
+            </tr>
+
+            <tr><td>
+                Meeting Participants:
+                 {% for person in meeting.members %}
+                    {% if meeting.members[person] != "" %}
+                      "{{ meeting.members[person] }}"
+                    {% endif %}
+                  {% endfor %}
+              </td></tr>
+              {% endfor %}
+          {% endif %}
+
           </tbody>
         </table>
       </div>
+
+
     </main>
 
 {% endblock %}

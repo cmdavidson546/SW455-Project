@@ -473,8 +473,9 @@ def display_by_time():
 @app.route('/display_by_user', methods=['POST'])
 def display_by_user():
     user_email = request.form['user-select-input']
-    print(user_email)
-    return make_response(back_to_profile())
+    meetingsC = Meeting.get_by_email(user_email)
+    meetingsP = Meeting.get_members(user_email)
+    return render_template('meetings-by-usr.html', email=user_email, meetingsC=meetingsC, meetingsP=meetingsP)
 
 
 
