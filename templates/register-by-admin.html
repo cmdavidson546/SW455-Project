@@ -1,0 +1,99 @@
+{% extends "index_user.html" %}
+
+{% block content %}
+
+<div class="container page-form">
+    <h1>Register New Administrator</h1>
+
+
+    <!-- BEGIN FORM HERE -->
+<form class="needs-validation" id="register-form" action="/auth/register_by_admin" method="post" novalidate>
+
+  <div class="form-row">
+    <div class="col-md-12 mb-2">
+      <label for="fname">First name</label>
+      <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" value="" required>
+      <div class="invalid-feedback">
+        Please provide first name.
+      </div>
+    </div>
+    <div class="col-md-12 mb-2">
+      <label for="lastname">Last name</label>
+      <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" value="" required>
+      <div class="invalid-feedback">
+        Please provide last name.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-12 mb-2">
+      <label for="email">Company Email</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="must use name@company email" value="" required>
+        <div class="invalid-feedback">
+          Please choose a username.
+        </div>
+    </div>
+
+    <div class="col-md-10 mb-2">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="8-10 characters" value="" required>
+      <div class="invalid-feedback">
+        Please provide a valid password.
+      </div>
+    </div>
+
+  </div>
+    <div class="form-row">
+        <label for="password">Administrator Code</label>
+      <input type="password" class="form-control" id="admincode" name="admincode" placeholder="5 characters" value="" required>
+      <div class="invalid-feedback">
+        Please provide a valid admin code.
+      </div>
+
+    </div>
+<hr>
+
+  <div class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+      <label class="form-check-label" for="invalidCheck">
+        Agree to terms and conditions
+      </label>
+      <div class="invalid-feedback">
+        You must agree before submitting.
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-outline-primary" type="submit">Submit form</button>
+</form>
+</div>
+
+    <!-- BUILT IN JS ALERT SYSTEM SCRIPTING HERE  -->
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+   window.addEventListener('load', function() {
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+
+            // if each line checks valid
+                 if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                 }
+            // else add to validated list
+                 form.classList.add('was-validated');
+            }, false);  // check form entries in loop
+        });
+   }, false);
+})();
+</script>
+
+{% endblock %}

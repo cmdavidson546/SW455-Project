@@ -51,16 +51,51 @@ def user_logout():
     User.logout()
     return render_template('user_type.html')
 
+
+########### REGISTER NEW USER METHODS ############
+
 # route to register page
 @app.route('/register')
 def register_page():
     return render_template('register.html')
 
-########### REGISTER NEW USER METHOD ############
+# route to register page from admin
+@app.route('/register_by_admin')
+def register_page_byadmin():
+    return render_template('register-by-admin.html')
+
+@app.route('/auth/register_by_admin', methods=['POST'])
+def register_user_by_admin():
+
+    # make name suitable for db
+    fname = request.form['fname']
+    lastname = request.form['lastname']
+    name = lastname + ', ' + fname
+
+    # get email and password
+    email = request.form['email']
+    password = request.form['password']
+
+    admincode = request.form['admincode']
+    acode = {
+        'admincode': admincode
+    }
+
+    if request.method == 'POST':
+        # add another layer by seeing if 'email' contains @specific_company_name
+        if Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode) is False:
+            return render_template('duplicate_user.html', error='Admin Email Already Registered as User')
+        else:
+            Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode)
+            return make_response(back_to_profile())
+    return render_template('registration_error.html', error='Invalid registration')
+
 # endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
     # get admin form data
+    # request.args.get('language')  # if key doesn't exist, returns None
+    # framework = request.args['framework']  # if key doesn't exist, returns a 400, bad request error
 
     admin = request.form['admin']
     if request.form['admincode'] is not None:
@@ -168,6 +203,9 @@ def back_to_profile():
 def new_meeting():
     return render_template('create_meeting.html')
 
+# BUG:  Cannot create a meeting for MON, 9AM.
+# Always returns duplicate meeting error
+#
 # /<string:workout_id>
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
@@ -316,10 +354,13 @@ def edit_meeting(meeting_id):
 
         # Next Compare dictionaries of user changes vs. original db
         items_to_update = dict_compare(meeting.members, members)
+        #print(items_to_update)
 
         if items_to_update is not None:
+            # meeting.update_meeting(meeting_id, key, items_to_update[key])
             k = items_to_update.keys()
             for key in k:
+                # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
                 v = items_to_update[key][1]
                 meeting.update_members(meeting_id, key, v)
 
@@ -346,9 +387,11 @@ def dict_compare(d1, d2):
 
     # returns dictionary of all keys that exist in both dicts that are the same
     same = set(o for o in intersect_keys if d1[o] == d2[o])
+    #print(modified)
+    #print(same)
     return modified
 
-####### EDIT PROFILE  ###########
+####### EDIT PROFILE  and PAYMENT INFO ###########
 @app.route('/edit/profile')
 def send_to_edit_profile():
     user = User.get_by_email(session['email'])
@@ -360,6 +403,46 @@ def send_to_edit_profile():
     cardcode = user.userinfo['cardcode']
     zipcode = user.userinfo['zipcode']
     return render_template('edit_profile.html', user=user, firstName=firstName, lastName=lastName, cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
+
+
+@app.route('/edit_billing_admin', methods=['POST'])
+def send_to_edit_billing():
+    email = request.form['update-bill-input']
+    if email is not None:
+        user = User.get_by_email(email)
+        name = user.name.split(',')
+        firstName = name[1]
+        lastName = name[0]
+        cardname = user.userinfo['cardname']
+        cardnumber = user.userinfo['cardnumber']
+        cardcode = user.userinfo['cardcode']
+        zipcode = user.userinfo['zipcode']
+        return render_template('edit-profile-by-admin.html', email=email, firstName=firstName, lastName=lastName,
+                               cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
+
+@app.route('/auth/edit_profile_by_admin', methods=['POST'])
+def edit_profile_by_admin():
+    email = request.form['email']
+    cardname = request.form['cardname']
+    cardnumber = request.form['cardnumber']
+    cardcode = request.form['cardcode']
+    zipcode = request.form['zipcode']
+    cardinfo = {
+        'cardname': cardname,
+        'cardnumber': cardnumber,
+        'cardcode': cardcode,
+        'zipcode': zipcode
+    }
+    user = User.get_by_email(email)
+    items_to_update = dict_compare(user.userinfo, cardinfo)
+
+    if items_to_update is not None:
+        k = items_to_update.keys()
+        for key in k:
+            # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
+            v = items_to_update[key][1]
+            user.update_userinfo(user._id, key, v)
+    return make_response(back_to_profile())
 
 @app.route('/auth/edit_profile', methods=['POST'])
 def edit_profile():
@@ -396,9 +479,12 @@ def edit_profile():
     if items_to_update is not None:
         k = items_to_update.keys()
         for key in k:
+            # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
             v = items_to_update[key][1]
             user.update_userinfo(user._id, key, v)
     return make_response(back_to_profile())
+
+
 
 ########## Search By Participation ############
 @app.route('/participation-as-member')
@@ -447,6 +533,7 @@ def display_meetings_by_room():
             if room_for_meetings.meetings[meeting] is not None:
                 #meetings.append(room_for_meetings.meetings[meeting])
                 meetings.append(meeting)
+    #print(meetings)
     return render_template('meetings-by-room.html', rooms=rooms, meetings=meetings)
 
 ########## Display All Meetings #############

@@ -7,7 +7,6 @@ from flask import session
 
 from common.database import Database
 
-
 class Meeting(object):
 
     # CONSTRUCTOR
@@ -43,6 +42,7 @@ class Meeting(object):
 
     @classmethod
     def get_all_meetings(cls):
+        # return list object of all meetings in DB
         return [meeting for meeting in Database.find(collection='meeting', query=None)]
 
     # TIME CONFLICT CHECK FOR SCHEDULING NEW MEETING
@@ -63,8 +63,11 @@ class Meeting(object):
         return True
 
     # FIND MANY BY USER EMAIL
+    # this does not work with returning pymongo cursor (e.g., 'for d in d for x in x:' )
+    # which returns error: TypeError: type object argument after ** must be a mapping, not Cursor
     @classmethod
     def get_by_email(cls, email):
+        # ADD SORT TO DATABASE.py:  then add to this func: cls.sort({'email': email}
         return [meeting for meeting in Database.find(collection='meeting', query={'email': email})]
 
     # REGISTER NEW MEETING
@@ -106,7 +109,9 @@ class Meeting(object):
             return 1
         return 0
 
-    # GET MEMBERSHIP
+    # GET MEMBERSHIP - NEED TO FIX - GET RID OF MEMBER.P FIELDS THAT ARE NONE
+    # Either that or space is left behind when membership is deleted?
+    # returns  [...[], [], [], [], [], [], [], [], []]  when client1@client.com is entered into search
     @classmethod
     def get_members(cls, email):
         if email is not None:
@@ -129,8 +134,3 @@ class Meeting(object):
     @classmethod
     def get_by_time(cls, usr_time):
         return [ meeting for meeting in Database.find(collection='meeting', query={'time': usr_time}) ]
-
-    @classmethod
-    def get_by_usr(cls, usr_day):
-        pass
-

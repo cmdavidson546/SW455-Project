@@ -11,12 +11,24 @@
 
         <table class="table table-striped table-sm">
           <tbody>
-            <tr><td><a class="nav-link" type="button" href="/display_by_week">Display Meetings By Week</a></td></tr>
-            <tr><td><a class="nav-link" type="button" href="/display_by_room">Display Meetings By Room</a></td></tr>
+
+            <tr><td>
+                <h5>Display All Meetings</h5>
+                <button id="week-btn" class="btn btn-primary btn-sm"><a href="/display_by_week" style="color: white;">Display</a></button>
+            </td></tr>
+
+
+            <tr><td>
+                <h5>Display Meetings By Room</h5>
+                <button id="room-btn" class="btn btn-primary btn-sm">
+                    <a href="/display_by_room" style="color: white;">Display</a>
+                </button>
+
+            </td></tr>
 
             <tr><td>
               <h5>Display Meetings By Day</h5>
-              <button id="day-btn" class="btn btn-primary btn-sm" onclick="myDayFunction()">Select Day</button>
+             <button id="day-btn" class="btn btn-primary btn-sm" onclick="myDayFunction()">Select Day</button>
               <div id="day-select-form"></div>
             </td></tr>
 
@@ -33,13 +45,36 @@
               <div id="user-select-form"></div>
             </td></tr>
 
-            <tr><td><a class="nav-link" type="button" href="/add_room">Add Room Available for Meetings</a></td></tr>
-             <tr><td><a class="nav-link" type="button" href="/view_rooms">Display Rooms Available for Meetings</a></td></tr>
-             <tr><td><a class="nav-link" type="button" href="/delete_room">Delete Room Available for Meetings</a></td></tr>
+            <tr><td>
+                <h5>Add Room to be Available for Meetings</h5>
+                <button id="add-rm-btn" class="btn btn-primary btn-sm"><a href="/add_room" style="color: white;">Add Room</a></button>
+            </td></tr>
 
-            <tr><td><a class="nav-link" type="button" href="/auth/register">Create New Administrator Account</a></td></tr>
-            <tr><td><a class="nav-link" type="button" href="#">Update Client's Billing Information</a></td></tr>
-            <tr><td><a class="nav-link" type="button" href="#">View Complaints and Respond</a></td></tr>
+             <tr><td>
+                 <h5>Display Rooms</h5>
+                 <button id="display-rm-btn" class="btn btn-primary btn-sm"><a href="/view_rooms" style="color: white;">Display Rooms</a></button>
+             </td></tr>
+
+             <tr><td>
+                <h5>Delete Room</h5>
+                 <button id="delete-rm-btn" class="btn btn-primary btn-sm"><a href="/delete_room" style="color: white;">Delete Room</a></button>
+             </td></tr>
+
+            <tr><td>
+                <h5>Create New Administrator Account</h5>
+                 <button id="create-admin-btn" class="btn btn-primary btn-sm"><a href="/register_by_admin" style="color: white;">Create</a></button>
+            </td></tr>
+
+            <tr><td>
+                <h5>Update Client's Billing Information</h5>
+              <button id="update-bill-btn" class="btn btn-primary btn-sm" onclick="updateBillFunction()">Select Client</button>
+              <div id="update-bill-form"></div>
+            </td></tr>
+
+            <tr><td>
+                 <h5>View Complaints and Respond</h5>
+                 <button id="view-cmplts-btn" class="btn btn-primary btn-sm"><a href="#" style="color: white;">View</a></button>
+            </td></tr>
 
           </tbody>
         </table>
@@ -51,46 +86,115 @@
                 var getButton = document.getElementById("day-btn");
                 getButton.disabled = true;
                 var user_div = document.getElementById("day-select-form");
+
                 var myForm = document.createElement("form");
                 myForm.action = "/display_by_day";
                 myForm.method = "POST";
-                var myInput = document.createElement("input");
-                myInput.type = "text";
-                myInput.class = "form-control";
-                myInput.id = "day-select";
-                myInput.name = "day-select";
-                myInput.placeholder = "Enter day";
+                myForm.id = "meeting-form";
+
+                var myDayDrop = document.createElement("select");
+                myDayDrop.form = "meeting-form";
+                myDayDrop.class = "btn btn-primary btn-small";
+                myDayDrop.id = "day-select";
+                myDayDrop.name = "day-select";
+
+                var opt1 = document.createElement('option');
+                opt1.appendChild( document.createTextNode('Monday') );
+                opt1.value = "Mon";
+                var opt2 = document.createElement('option');
+                opt2.appendChild( document.createTextNode('Tuesday') );
+                opt2.value = "Tue";
+                var opt3 = document.createElement('option');
+                opt3.appendChild( document.createTextNode('Wednesday') );
+                opt3.value = "Wed";
+                var opt4 = document.createElement('option');
+                opt4.appendChild( document.createTextNode('Thursday') );
+                opt4.value = "Thu";
+                var opt5 = document.createElement('option');
+                opt5.appendChild( document.createTextNode('Friday') );
+                opt5.value = "Fri";
+
+                myDayDrop.appendChild(opt1);
+                myDayDrop.appendChild(opt2);
+                myDayDrop.appendChild(opt3);
+                myDayDrop.appendChild(opt4);
+                myDayDrop.appendChild(opt5);
+
                 var myBtn = document.createElement("button");
                 myBtn.class = "btn btn-primary btn-sm";
                 myBtn.id = "return-day";
                 myBtn.type = "submit";
-                myBtn.innerHTML = "Find By Day of the Week";
+                myBtn.innerHTML = "Find By Day";
+
                 user_div.appendChild(myForm);
-                myForm.appendChild(myInput);
+                myForm.appendChild(myDayDrop);
                 myForm.appendChild(myBtn);
 
               }
 
               function myTimeFunction() {
+
                 var getButton = document.getElementById("time-btn");
                 getButton.disabled = true;
                 var user_div = document.getElementById("time-select-form");
+
                 var myForm = document.createElement("form");
                 myForm.action = "/display_by_time";
                 myForm.method = "POST";
-                var myInput = document.createElement("input");
-                myInput.type = "text";
-                myInput.class = "form-control";
-                myInput.id = "time-select";
-                myInput.name = "time-select";
-                myInput.placeholder = "Enter time";
+                myForm.id = "meeting-form2";
+
+                var myTimeDrop = document.createElement("select");
+                myTimeDrop.form = "meeting-form2";
+                myTimeDrop.class = "btn btn-primary btn-small";
+                myTimeDrop.id = "time-select";
+                myTimeDrop.name = "time-select";
+
+                var opt1 = document.createElement('option');
+                opt1.appendChild( document.createTextNode('9:00 AM') );
+                opt1.value = "9AM";
+                var opt2 = document.createElement('option');
+                opt2.appendChild( document.createTextNode('10:00 AM') );
+                opt2.value = "10AM";
+                var opt3 = document.createElement('option');
+                opt3.appendChild( document.createTextNode('11:00 AM') );
+                opt3.value = "11AM";
+                var opt4 = document.createElement('option');
+                opt4.appendChild( document.createTextNode('12:00 PM') );
+                opt4.value = "12PM";
+                var opt5 = document.createElement('option');
+                opt5.appendChild( document.createTextNode('1:00 PM') );
+                opt5.value = "1PM";
+                var opt6 = document.createElement('option');
+                opt6.appendChild( document.createTextNode('2:00 PM') );
+                opt6.value = "2PM";
+                var opt7 = document.createElement('option');
+                opt7.appendChild( document.createTextNode('3:00 PM') );
+                opt7.value = "3PM";
+                var opt8 = document.createElement('option');
+                opt8.appendChild( document.createTextNode('4:00 PM') );
+                opt8.value = "4PM";
+                var opt9 = document.createElement('option');
+                opt9.appendChild( document.createTextNode('5:00 PM') );
+                opt9.value = "5PM";
+
+                myTimeDrop.appendChild(opt1);
+                myTimeDrop.appendChild(opt2);
+                myTimeDrop.appendChild(opt3);
+                myTimeDrop.appendChild(opt4);
+                myTimeDrop.appendChild(opt5);
+                myTimeDrop.appendChild(opt6);
+                myTimeDrop.appendChild(opt7);
+                myTimeDrop.appendChild(opt8);
+                myTimeDrop.appendChild(opt9);
+
                 var myBtn = document.createElement("button");
                 myBtn.class = "btn btn-primary btn-sm";
                 myBtn.id = "return-time";
                 myBtn.type = "submit";
                 myBtn.innerHTML = "Find By Timeslot";
+
                 user_div.appendChild(myForm);
-                myForm.appendChild(myInput);
+                myForm.appendChild(myTimeDrop);
                 myForm.appendChild(myBtn);
 
 
@@ -117,8 +221,36 @@
                 user_div.appendChild(myForm);
                 myForm.appendChild(myInput);
                 myForm.appendChild(myBtn);
-
               }
+
+              function updateBillFunction() {
+                var getButton = document.getElementById("update-bill-btn");
+                getButton.disabled = true;
+
+                var user_div = document.getElementById("update-bill-form");
+                var myForm = document.createElement("form");
+                myForm.action = "/edit_billing_admin";
+                myForm.method = "POST";
+
+                var myInput = document.createElement("input");
+                myInput.type = "text";
+                myInput.class = "form-control";
+                myInput.id = "update-bill-input";
+                myInput.name = "update-bill-input";
+                myInput.placeholder = "Enter user email";
+
+                var myBtn = document.createElement("button");
+                myBtn.class = "btn btn-primary btn-sm";
+                myBtn.id = "update-billing";
+                myBtn.type = "submit";
+                myBtn.innerHTML = "Find By User";
+
+                user_div.appendChild(myForm);
+                myForm.appendChild(myInput);
+                myForm.appendChild(myBtn);
+              }
+
+
             </script>
     </main>
 
