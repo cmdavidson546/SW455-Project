@@ -7,12 +7,7 @@ from flask import session
 
 from common.database import Database
 
-"""
-This MSS keeps track of meetings schedule and which people are in what meeting in which room. 
-The application is not required to perform scheduling.
-"""
 
-# NEED TO ADD ROOM CLASS OBJECT INSTANCE TO EACH MEETING
 class Meeting(object):
 
     # CONSTRUCTOR
@@ -48,8 +43,6 @@ class Meeting(object):
 
     @classmethod
     def get_all_meetings(cls):
-        meetings = Database.find(collection='meeting', query=None)
-        #return [cls(**meetings) for meeting in meetings]
         return [meeting for meeting in Database.find(collection='meeting', query=None)]
 
     # TIME CONFLICT CHECK FOR SCHEDULING NEW MEETING
@@ -70,15 +63,9 @@ class Meeting(object):
         return True
 
     # FIND MANY BY USER EMAIL
-    # this does not work with returning pymongo cursor (e.g., 'for d in d for x in x:' )
-    # which returns error: TypeError: type object argument after ** must be a mapping, not Cursor
     @classmethod
     def get_by_email(cls, email):
-        #data = Database.find('meeting', {'email': email})
-        #return cls(**data)
-        # ADD SORT TO DATABASE.py:  then add to this func: cls.sort({'email': email}
         return [meeting for meeting in Database.find(collection='meeting', query={'email': email})]
-
 
     # REGISTER NEW MEETING
     @classmethod
@@ -134,3 +121,16 @@ class Meeting(object):
             list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p9': email})])
             list1.append([meeting for meeting in Database.find(collection='meeting', query={'members.p10': email})])
             return list1
+
+    @classmethod
+    def get_by_day(cls, usr_day):
+        return [ meeting for meeting in Database.find(collection='meeting', query={'day': usr_day}) ]
+
+    @classmethod
+    def get_by_time(cls, usr_time):
+        return [ meeting for meeting in Database.find(collection='meeting', query={'time': usr_time}) ]
+
+    @classmethod
+    def get_by_usr(cls, usr_day):
+        pass
+

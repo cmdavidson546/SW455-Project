@@ -61,8 +61,6 @@ def register_page():
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
     # get admin form data
-    # request.args.get('language')  # if key doesn't exist, returns None
-    # framework = request.args['framework']  # if key doesn't exist, returns a 400, bad request error
 
     admin = request.form['admin']
     if request.form['admincode'] is not None:
@@ -170,9 +168,6 @@ def back_to_profile():
 def new_meeting():
     return render_template('create_meeting.html')
 
-# BUG:  Cannot create a meeting for MON, 9AM.
-# Always returns duplicate meeting error
-#
 # /<string:workout_id>
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
@@ -321,13 +316,10 @@ def edit_meeting(meeting_id):
 
         # Next Compare dictionaries of user changes vs. original db
         items_to_update = dict_compare(meeting.members, members)
-        #print(items_to_update)
 
         if items_to_update is not None:
-            # meeting.update_meeting(meeting_id, key, items_to_update[key])
             k = items_to_update.keys()
             for key in k:
-                # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
                 v = items_to_update[key][1]
                 meeting.update_members(meeting_id, key, v)
 
@@ -354,8 +346,6 @@ def dict_compare(d1, d2):
 
     # returns dictionary of all keys that exist in both dicts that are the same
     same = set(o for o in intersect_keys if d1[o] == d2[o])
-    #print(modified)
-    #print(same)
     return modified
 
 ####### EDIT PROFILE  ###########
@@ -406,7 +396,6 @@ def edit_profile():
     if items_to_update is not None:
         k = items_to_update.keys()
         for key in k:
-            # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
             v = items_to_update[key][1]
             user.update_userinfo(user._id, key, v)
     return make_response(back_to_profile())
@@ -435,14 +424,14 @@ def delete_room_redirect():
     rooms = RoomMatrix.get_rooms()
     return render_template('view-avail-rooms.html', rooms=rooms)
 
-# <string:meeting_id>', methods=['POST']
+# ######### delete room from room_matrix and room.py #############
 @app.route('/delete_room/<string:office_id>')
 def delete_room(office_id):
     room_id = RoomMatrix.get_by_id(office_id)
     RoomMatrix.delete_room(office_id, room_id)
     return make_response(back_to_profile())
 
-########## NEW #############
+########## Display Meetings by Room #############
 @app.route('/display_by_room')
 def display_meetings_by_room():
     # for room number and room_id
@@ -458,26 +447,37 @@ def display_meetings_by_room():
             if room_for_meetings.meetings[meeting] is not None:
                 #meetings.append(room_for_meetings.meetings[meeting])
                 meetings.append(meeting)
-    #print(meetings)
     return render_template('meetings-by-room.html', rooms=rooms, meetings=meetings)
 
+########## Display All Meetings #############
 @app.route('/display_by_week')
 def display_all():
     meetings = Meeting.get_all_meetings()
     return render_template('meetings-by-week.html', meetings=meetings)
 
-@app.route('/display_by_day')
+########## Display Meetings by Day of the Week #############
+@app.route('/display_by_day', methods=['POST'])
 def display_by_day():
-    pass
+    day_select = request.form['day-select']
+    meetings = Meeting.get_by_day(day_select)
+    return render_template('meetings-by-day.html', meetings=meetings)
 
-@app.route('/display_by_time')
+########## Display Meetings by Time of the Day #############
+@app.route('/display_by_time', methods=['POST'])
 def display_by_time():
-    pass
+    time_select = request.form['time-select']
+    meetings = Meeting.get_by_time(time_select)
+    return render_template('meetings-by-time.html', meetings=meetings)
 
-
-@app.route('/display_by_user')
+########## Display Meetings by User #############
+@app.route('/display_by_user', methods=['POST'])
 def display_by_user():
-    pass
+    user_email = request.form['user-select-input']
+    print(user_email)
+    return make_response(back_to_profile())
+
+
+
 
 ########## PORT and App RUN() METHOD #############
 
