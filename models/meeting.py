@@ -32,10 +32,14 @@ class Meeting(object):
             'created_date': self.created_date
         }
 
-    # SAVE MEETINGS TO DB
+    #### INSTANCE METHODS ####
     def save_to_mongo(self):
         Database.insert(collection='meeting', data=self.json())
 
+    def get_room_number_for_meeting(self):
+        return self.r_number
+
+    #### CLASS METHODS ####
     # FIND ONE BY MEETING ID
     # return **class object rather than pymongo cursor
     @classmethod
@@ -142,4 +146,3 @@ class Meeting(object):
     @classmethod
     def get_by_time(cls, usr_time):
         return [ meeting for meeting in Database.find(collection='meeting', query={'time': usr_time}) ]
-

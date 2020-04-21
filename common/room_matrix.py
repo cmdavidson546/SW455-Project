@@ -23,19 +23,20 @@ class RoomMatrix(object):
             'room_id': self.room_id,
             '_id': self._id
         }
-
-    @classmethod
-    def get_room_number(cls, roomID):
-        office = Database.find_one('office', {'room_id': roomID})
-        r_number = office['room']
-        return r_number
-
+    #### INSTANCE METHODS ####
     def create_room(self):
         room = Room(meetings=None,roomNum=self.roomNum)
         self.room_id = room._id
         room.save_to_mongo()
         Database.insert(collection='office', data=self.json())
         return room._id
+
+    #### CLASS METHODS ####
+    @classmethod
+    def get_room_number(cls, roomID):
+        office = Database.find_one('office', {'room_id': roomID})
+        r_number = office['room']
+        return r_number
 
     @classmethod
     def get_rooms(cls):
@@ -71,5 +72,5 @@ class RoomMatrix(object):
         return False
 
 
-    # return room number
+
 

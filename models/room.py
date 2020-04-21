@@ -19,9 +19,14 @@ class Room(object):
              '_id': self._id
          }
 
+    #### INSTANCE METHODS ####
     def save_to_mongo(self):
         Database.insert(collection='room', data=self.json())
 
+    def get_room_number(self):
+        return self.roomNum
+
+    #### CLASS METHODS ####
     @classmethod
     def delete_room_base(cls, room_id):
         Database.remove_one(collection='room', searchVal=room_id)

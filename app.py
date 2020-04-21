@@ -26,6 +26,7 @@ def open_app():
     return render_template('user_type.html')
 
 
+
 ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
 ##################################################################
 
@@ -523,12 +524,14 @@ def display_meetings_by_room():
         room_id = room['room_id']
         # returns class
         room_for_meetings = Room.get_from_mongo(room_id)
+
 ############# NEED TO FIX - PRINTS ALL MEETINGS FOR EVERY ROOM ##################
         for meeting in room_for_meetings.meetings:
             if room_for_meetings.meetings[meeting] is not None:
                 #meetings.append(room_for_meetings.meetings[meeting])
                 meetings.append(meeting)
-    #print(meetings)
+############# NEED TO FIX - PRINTS ALL MEETINGS FOR EVERY ROOM ##################
+    
     return render_template('meetings-by-room.html', rooms=rooms, meetings=meetings)
 
 ########## Display All Meetings #############
@@ -559,6 +562,55 @@ def display_by_user():
     meetingsP = Meeting.get_members(user_email)
     return render_template('meetings-by-usr.html', email=user_email, meetingsC=meetingsC, meetingsP=meetingsP)
 
+
+######### COMPLAINT CLASS RE-DIRECTS ###################
+@app.route('/file_complaint')
+def fileComplaint():
+    return render_template('file-complaint.html', email=session['email'])
+
+@app.route('/auth/file_complaint', methods=['POST'])
+def file_complaint():
+    email = request.form['email']
+    message = request.form['message']
+    complaint = Complaint(email, message)
+    complaint.save_to_mongo()
+    return make_response(back_to_profile())
+
+@app.route('/view_complaints')
+def view_complaints():
+    complaints = Complaint.get_from_mongo()
+    return render_template('view-complaints.html', complaints=complaints)
+
+
+@app.route('/comp_respond_one/<string:complaint_id>')
+def respond_to_complaint(complaint_id):
+    complaint = Complaint.get_by_id(complaint_id)
+    return render_template('respond-to-complaint.html', complaint=complaint)
+
+@app.route('/auth/comp_respond_one', methods=['POST'])
+def response_to_complaint():
+    message = request.form['message']
+    print(message)
+    return make_response(back_to_profile())
+
+@app.route('/comp_delete_one/<string:complaint_id>')
+def delete_complaint(complaint_id):
+    Complaint.delete_complaint(complaint_id)
+    return make_response(back_to_profile())
+
+
+###### PAYMENT CLASS RE-DIRECTS #############
+@app.route('/pay_for_special')
+def paySpecial():
+    return make_response(back_to_profile())
+
+@app.route('/auth/pay_for_special', methods=['POST'])
+def pay_special_payments():
+    pass
+
+@app.route('/view/special_payments')
+def view_special_payments():
+    pass
 
 
 ########## PORT and App RUN() METHOD #############

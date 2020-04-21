@@ -1,0 +1,46 @@
+{% extends "index_user.html" %}
+
+{% block content %}
+
+<div class="container page-form">
+    <h1>Respond to Complaint</h1>
+
+  <div class="form-row">
+
+    <!-- BEGIN FORM HERE -->
+    <form id="register-form" action="/auth/comp_respond_one" method="post">
+          <div class="form-row">
+              <div class="col-md-12 mb-1">
+              <label for="email">Responding to Complaint Email</label>
+              <input type="text" class="form-control" id="email" name="email" readonly="readonly" value="{{complaint.email}}">
+            </div>
+          </div>
+           <div class="col-md-12 mb-1">
+              <label for="user-message">Original Complaint</label>
+              <textarea class="form-control" id="user-message" name="user-message" readonly="readonly" style="width:600px; height:auto;">
+                {{ complaint.message }}
+              </textarea>
+           </div>
+        <div class="form-row"><h3>Response</h3>
+        </div>
+
+        <div class="form-row">
+
+              <div class="col-md-12 mb-1">
+              <label for="message">Enter Response Here:</label>
+              <textarea class="form-control" id="message" name="message" style="width:600px; height:auto;">
+
+              </textarea>
+            </div>
+
+        </div>
+        <div class="form-row">
+            <button class="btn btn-outline-primary" type="submit">Respond</button>
+        </div>
+
+    </form>
+</div>
+</div>
+
+
+{% endblock %}
