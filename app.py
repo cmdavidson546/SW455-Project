@@ -8,7 +8,6 @@ from flask import Flask, render_template, request, session, jsonify, make_respon
 from common.database import Database
 from common.room_matrix import RoomMatrix
 from models.complaint import Complaint
-from models.complain import Payment
 from models.meeting import Meeting
 from models.room import Room
 from models.admin import Admin
