@@ -1,9 +1,11 @@
 __author__ = "christopherdavidson"
 
 import uuid
-
 from common.database import Database
-from models.meeting import Meeting
+
+#############################################
+# ROOM CLASS: Keeps track of Rooms available for meetings
+#############################################
 
 class Room(object):
 
@@ -53,7 +55,6 @@ class Room(object):
         if room is not None:
             return cls(**room)
         return False
-
 
     @classmethod
     def erase_meeting(cls, searchKey, room_id):

@@ -2,9 +2,11 @@ __author__ = "christopherdavidson"
 
 import datetime
 import uuid
-
 from common.database import Database
 
+####################################
+# COMPLAINT CLASS: Keeps Track of Complaints from Clients 
+####################################
 
 class Complaint(object):
 
@@ -27,9 +29,6 @@ class Complaint(object):
 
     @classmethod
     def get_from_mongo(cls):
-        # return [cls(**complaints) for complaint in Database.find(collection='complaint', query=None)]
-
-        # return list object of all complaints in DB
         return [complaint for complaint in Database.find(collection='complaint', query=None)]
 
     # DELETE Complaint

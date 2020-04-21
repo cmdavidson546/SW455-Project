@@ -1,10 +1,12 @@
 __author__ = 'christopherdavidson'
 
 import uuid
-
 from common.database import Database
 from models.room import Room
 
+####################################
+# ROOM MATRIX: Keeps Track of Rooms Available for meetings 
+####################################
 
 class RoomMatrix(object):
     counter = 0     # shared for all instances
@@ -42,14 +44,6 @@ class RoomMatrix(object):
     def get_rooms(cls):
         return [room for room in Database.find(collection='office', query={})]
 
-    # DOESN'T WORK
-    # since the Database method .find returns a pymongo cursor
-    # we use cls(**item) which returns a new dict for
-    # each list element instead of a pymongo cursor object
-    # the double **item says to pass in all arguments.
-    # TRY SOMETHING LIKE:
-    #return [cls(**item) for item in items_from_db]
-
     @classmethod
     def get_by_id(cls, m_id):
         office = Database.find_one('office', {'_id': m_id})
@@ -70,7 +64,5 @@ class RoomMatrix(object):
                 Database.remove_one(collection='office', searchVal=office_id)
                 return True
         return False
-
-
 
 

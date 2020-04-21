@@ -1,5 +1,9 @@
 __author__ = "christopherdavidson"
 
+##########################################################
+#################### IMPORTS #############################
+##########################################################
+
 from flask import Flask, render_template, request, session, jsonify, make_response
 from common.database import Database
 from common.room_matrix import RoomMatrix
@@ -11,6 +15,10 @@ from models.user import User
 import os
 import re
 import random
+
+##########################################################
+##### Start App, initialize DB, set SERVER HOME ENDPOINT ####
+##########################################################
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
@@ -25,8 +33,7 @@ def initialize_database():
 def open_app():
     return render_template('user_type.html')
 
-
-
+##################################################################
 ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
 ##################################################################
 
@@ -53,7 +60,9 @@ def user_logout():
     return render_template('user_type.html')
 
 
-########### REGISTER NEW USER METHODS ############
+####################################
+########### REGISTRATION ###########
+####################################
 
 # route to register page
 @app.route('/register')
@@ -95,9 +104,6 @@ def register_user_by_admin():
 @app.route('/auth/register', methods=['POST', 'GET'])
 def register_user():
     # get admin form data
-    # request.args.get('language')  # if key doesn't exist, returns None
-    # framework = request.args['framework']  # if key doesn't exist, returns a 400, bad request error
-
     admin = request.form['admin']
     if request.form['admincode'] is not None:
         admincode = request.form['admincode']
@@ -144,7 +150,11 @@ def register_user():
                 return render_template('client_profile.html', email=email, name=name, meetings=meetings)
     return render_template('registration_error.html', error='Invalid registration')
 
+
+############################################
 ####### LOGIN EXISTING USER METHODS #########
+############################################
+
 # create session for logged in user -> admin_profile.html
 @app.route('/admin/login', methods=['POST', 'GET'])
 def admin_login():
@@ -181,7 +191,10 @@ def client_login():
 def forgot_password():
     return render_template('pages-forgot-password.html')
 
+############################################
 ####### BACK TO MENU LINK METHODS #########
+############################################
+
 # link to profile... user must be logged in
 @app.route('/back_to_profile')
 def back_to_profile():
@@ -199,15 +212,14 @@ def back_to_profile():
             return render_template('login_error.html', error='Invalid Request')
     return render_template('login_error.html', error='Invalid Request')
 
-########### CREATE MEETING METHODS
+############################################
+########### MEETING METHODS ###########
+############################################
+
 @app.route('/auth/newmeeting', methods=['POST', 'GET'])
 def new_meeting():
     return render_template('create_meeting.html')
 
-# BUG:  Cannot create a meeting for MON, 9AM.
-# Always returns duplicate meeting error
-#
-# /<string:workout_id>
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
     if request.method == 'POST':
@@ -281,7 +293,6 @@ def delete_one(meeting_id):
         # update the room using _id to erase the meeting from the existing meeting. list
         Room.erase_meeting(room_id=room_object._id, searchKey=searchKey)
 
-
     # delete the meeting from 'meetings' collection and return to profile dashboard
     meeting.delete_meeting(meeting_id)
     return make_response(back_to_profile())
@@ -299,7 +310,7 @@ def get_meetings():
         return render_template('meetings-by-creator.html', email=session['email'], name=user.name, meetings=meetings)
     return make_response(back_to_profile())
 
-############# EDIT MEETING  ###################
+# EDIT MEETING
 @app.route('/edit_one/<string:meeting_id>')
 def goto_edit_meeting(meeting_id):
     meeting = Meeting.from_mongo(meeting_id)
@@ -364,7 +375,10 @@ def edit_meeting(meeting_id):
         return render_template('meetings-by-creator.html', email=session['email'], name=user.name, meetings=meetings)
     return render_template('create_meeting_error.html', error='Could not update Meeting')
 
-#### COMPARE 2 DICTIONARIES ####
+############################################
+########### COMPARE 2 DICTIONARIES ###########
+############################################
+
 def dict_compare(d1, d2):
     # convert data to set()
     d1_keys = set(d1.keys())
@@ -387,7 +401,10 @@ def dict_compare(d1, d2):
     #print(same)
     return modified
 
-####### EDIT PROFILE  and PAYMENT INFO ###########
+#######################################################
+####### PROFILE and BILLING METHODS ###########
+#######################################################
+
 @app.route('/edit/profile')
 def send_to_edit_profile():
     user = User.get_by_email(session['email'])
@@ -481,13 +498,11 @@ def edit_profile():
             user.update_userinfo(user._id, key, v)
     return make_response(back_to_profile())
 
-########## Search By Participation ############
-@app.route('/participation-as-member')
-def participation_membership():
-    meetings = Meeting.get_members(session['email'])
-    return render_template('meetings-participation-2.html', meetings=meetings)
 
-########## CREATE, EDIT, VIEW ROOMS AVAILABLE FOR MEETINGS ############
+################################################
+########### CREATE, EDIT, VIEW ROOMS ###########
+############################################
+
 @app.route('/add_room')
 def add_rooms():
     newRoom = RoomMatrix()
@@ -511,6 +526,16 @@ def delete_room(office_id):
     room_id = RoomMatrix.get_by_id(office_id)
     RoomMatrix.delete_room(office_id, room_id)
     return make_response(back_to_profile())
+
+############################################
+########### SEARCH AND DISPLAY METHODS ###########
+############################################
+
+########## Search By Participation ############
+@app.route('/participation-as-member')
+def participation_membership():
+    meetings = Meeting.get_members(session['email'])
+    return render_template('meetings-participation-2.html', meetings=meetings)
 
 ########## Display Meetings by Room #############
 @app.route('/display_by_room')
@@ -563,7 +588,10 @@ def display_by_user():
     return render_template('meetings-by-usr.html', email=user_email, meetingsC=meetingsC, meetingsP=meetingsP)
 
 
-######### COMPLAINT CLASS RE-DIRECTS ###################
+#############################################
+######### COMPLAINT CLASS METHODS #########
+#############################################
+
 @app.route('/file_complaint')
 def fileComplaint():
     return render_template('file-complaint.html', email=session['email'])
@@ -599,7 +627,10 @@ def delete_complaint(complaint_id):
     return make_response(back_to_profile())
 
 
-###### PAYMENT CLASS RE-DIRECTS #############
+#############################################
+######### PAYMENT CLASS METHODS #########
+#############################################
+
 @app.route('/pay_for_special')
 def paySpecial():
     return make_response(back_to_profile())
@@ -613,7 +644,9 @@ def view_special_payments():
     pass
 
 
-########## PORT and App RUN() METHOD #############
+#############################################
+########## PORT and App.RUN METHOD ########
+#############################################
 
 if __name__ == '__main__':
     app.run(debug=True)

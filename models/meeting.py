@@ -2,12 +2,13 @@ __author__ = "christopherdavidson"
 
 import uuid
 import datetime
-
 from flask import session
-
 from common.database import Database
 
-# NEED TO ADD ROOM CLASS OBJECT INSTANCE TO EACH MEETING
+####################################
+# MEETING CLASS: Keeps Track of Meetings created by Clients 
+####################################
+
 class Meeting(object):
 
     # CONSTRUCTOR
@@ -77,9 +78,6 @@ class Meeting(object):
     # which returns error: TypeError: type object argument after ** must be a mapping, not Cursor
     @classmethod
     def get_by_email(cls, email):
-        #data = Database.find('meeting', {'email': email})
-        #return cls(**data)
-        # ADD SORT TO DATABASE.py:  then add to this func: cls.sort({'email': email}
         return [meeting for meeting in Database.find(collection='meeting', query={'email': email})]
 
     # REGISTER NEW MEETING
@@ -122,8 +120,6 @@ class Meeting(object):
         return 0
 
     # GET MEMBERSHIP - NEED TO FIX - GET RID OF MEMBER.P FIELDS THAT ARE NONE
-    # Either that or space is left behind when membership is deleted?
-    # returns  [...[], [], [], [], [], [], [], [], []]  when client1@client.com is entered into search
     @classmethod
     def get_members(cls, email):
         if email is not None:
