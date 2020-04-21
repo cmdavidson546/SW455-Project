@@ -9,69 +9,91 @@
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <tbody>
-            <tr><td>
-                <h5>Display All Meetings</h5>
-                <button id="week-btn" class="btn btn-primary btn-sm"><a href="/display_by_week" style="color: white;">Display</a></button>
-            </td></tr>
+            <tr>
+                <td>
+                    <div class="container">
+                        <div class="row">
 
-            <tr><td>
-                <h5>Display Meetings By Room</h5>
-                <button id="room-btn" class="btn btn-primary btn-sm">
-                    <a href="/display_by_room" style="color: white;">Display</a>
-                </button>
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Display Meetings</h5>
+                                <button id="week-btn" class="btn btn-primary btn-sm"><a href="/display_by_week" style="color: white;">Display</a></button>
+                            </div>
 
-            </td></tr>
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Add Room</h5>
+                                <button id="add-rm-btn" class="btn btn-primary btn-sm"><a href="/add_room" style="color: white;">Add Room</a></button>
+                            </div>
 
-            <tr><td>
-              <h5>Display Meetings By Day</h5>
-             <button id="day-btn" class="btn btn-primary btn-sm" onclick="myDayFunction()">Select Day</button>
-              <div id="day-select-form"></div>
-            </td></tr>
+                            <div class="w-100"></div>
+                            <hr>
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Display Meetings By Room</h5>
+                                <button id="room-btn" class="btn btn-primary btn-sm"><a href="/display_by_room" style="color: white;">Display</a></button>
+                            </div>
 
-            <tr><td>
-                <h5>Display Meetings By Time</h5>
-                <button id="time-btn" class="btn btn-primary btn-sm" onclick="myTimeFunction()">Select Time</button>
-                <div id="time-select-form"></div>
-            </td></tr>
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Display Available Rooms</h5>
+                                <button id="display-rm-btn" class="btn btn-primary btn-sm"><a href="/view_rooms" style="color: white;">Display Rooms</a></button>
+                            </div>
 
+                            <div class="w-100"></div>
+                            <hr>
 
-            <tr><td>
-              <h5>Display Meetings By User</h5>
-              <button id="usr-btn" class="btn btn-primary btn-sm" onclick="myUserFunction()">Select User</button>
-              <div id="user-select-form"></div>
-            </td></tr>
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Display By Day</h5>
+                                <button id="day-btn" class="btn btn-primary btn-sm" onclick="myDayFunction()">Select Day</button>
+                                <div id="day-select-form"></div>
+                            </div>
 
-            <tr><td>
-                <h5>Add Room to be Available for Meetings</h5>
-                <button id="add-rm-btn" class="btn btn-primary btn-sm"><a href="/add_room" style="color: white;">Add Room</a></button>
-            </td></tr>
+                             <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Delete Room</h5>
+                                <button id="delete-rm-btn" class="btn btn-primary btn-sm"><a href="/delete_room" style="color: white;">Delete Room</a></button>
+                            </div>
 
-             <tr><td>
-                 <h5>Display Rooms</h5>
-                 <button id="display-rm-btn" class="btn btn-primary btn-sm"><a href="/view_rooms" style="color: white;">Display Rooms</a></button>
-             </td></tr>
+                            <div class="w-100"></div>
+                            <hr>
 
-             <tr><td>
-                <h5>Delete Room</h5>
-                 <button id="delete-rm-btn" class="btn btn-primary btn-sm"><a href="/delete_room" style="color: white;">Delete Room</a></button>
-             </td></tr>
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Display By Time</h5>
+                                <button id="time-btn" class="btn btn-primary btn-sm" onclick="myTimeFunction()">Select Time</button>
+                                <div id="time-select-form"></div>
+                            </div>
 
-            <tr><td>
-                <h5>Create New Administrator Account</h5>
-                 <button id="create-admin-btn" class="btn btn-primary btn-sm"><a href="/register_by_admin" style="color: white;">Create</a></button>
-            </td></tr>
+                             <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Create New Admin</h5>
+                                <button id="create-admin-btn" class="btn btn-primary btn-sm"><a href="/register_by_admin" style="color: white;">Create</a></button>
+                            </div>
 
-            <tr><td>
-                <h5>Update Client's Billing Information</h5>
-              <button id="update-bill-btn" class="btn btn-primary btn-sm" onclick="updateBillFunction()">Select Client</button>
-              <div id="update-bill-form"></div>
-            </td></tr>
+                            <div class="w-100"></div>
+                            <hr>
 
-            <tr><td>
-                 <h5>View Complaints and Respond</h5>
-                 <button id="view-cmplts-btn" class="btn btn-primary btn-sm"><a href="/view_complaints" style="color: white;">View</a></button>
-            </td></tr>
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Display By User</h5>
+                                <button id="usr-btn" class="btn btn-primary btn-sm" onclick="myUserFunction()">Select User</button>
+                                <div id="user-select-form"></div>
+                            </div>
 
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Update Billing</h5>
+                                <button id="update-bill-btn" class="btn btn-primary btn-sm" onclick="updateBillFunction()">Select Client</button>
+                                <div id="update-bill-form"></div>
+                            </div>
+
+                            <div class="w-100"></div>
+                            <hr>
+
+                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
+                                <h5>Review Complaints</h5>
+                                <button id="view-cmplts-btn" class="btn btn-primary btn-sm"><a href="/view_complaints" style="color: white;">View</a></button>
+                            </div>
+                            <div class="col">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -192,6 +214,8 @@
                 user_div.appendChild(myForm);
                 myForm.appendChild(myTimeDrop);
                 myForm.appendChild(myBtn);
+
+
               }
 
               function myUserFunction() {
@@ -243,6 +267,8 @@
                 myForm.appendChild(myInput);
                 myForm.appendChild(myBtn);
               }
+
+
             </script>
     </main>
 
