@@ -8,6 +8,7 @@ from flask import Flask, render_template, request, session, jsonify, make_respon
 from common.database import Database
 from common.room_matrix import RoomMatrix
 from models.complaint import Complaint
+from models.payment import Payment
 from models.meeting import Meeting
 from models.room import Room
 from models.admin import Admin
@@ -634,15 +635,46 @@ def delete_complaint(complaint_id):
 
 @app.route('/pay_for_special')
 def paySpecial():
-    return make_response(back_to_profile())
+    user = User.get_by_email(session['email'])
+    cardname = user.userinfo['cardname']
+    cardnumber = user.userinfo['cardnumber']
+    cardcode = user.userinfo['cardcode']
+    zipcode = user.userinfo['zipcode']
+    return render_template('pay-for-special-room.html', email=user.email, cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
+
 
 @app.route('/auth/pay_for_special', methods=['POST'])
 def pay_special_payments():
-    pass
+    email = request.form['email']
+    cardname = request.form['cardname']
+    cardnumber = request.form['cardnumber']
+    cardcode = request.form['cardcode']
+    zipcode = request.form['zipcode']
+    cardinfo = {
+        'cardname': cardname,
+        'cardnumber': cardnumber,
+        'cardcode': cardcode,
+        'zipcode': zipcode
+    }
+    payment = Payment(email=email, cardinfo=cardinfo)
+    payment.save_to_mongo()
+    return make_response(back_to_profile())
 
 @app.route('/view/special_payments')
 def view_special_payments():
-    pass
+    payments = Payment.get_from_mongo()
+    return render_template('view-payments.html', payments=payments)
+
+@app.route('/pay_delete_one/<string:payment_id>')
+def delete_payment(payment_id):
+    Payment.delete_payment(payment_id)
+    return make_response(back_to_profile())
+
+# Does not do anything... final version should allow user to edit payment
+@app.route('/pay_edit_one/<string:payment_id>')
+def edit_payment(payment_id):
+    payment = Payment.get_by_id(payment_id)
+    return make_response(back_to_profile())
 
 
 #############################################

@@ -1,0 +1,55 @@
+{% extends "index_user.html" %}
+
+{% block content %}
+
+<div class="container page-form">
+    <h1>Pay For Special Event Room</h1>
+
+  <div class="form-row">
+
+    <form id="register-form" action="/auth/pay_for_special" method="post">
+          <div class="form-row">
+              <div class="col-md-12 mb-1">
+              <label for="cardname">Email on Card</label>
+              <input type="text" class="form-control" id="email" name="email" readonly="readonly" value="{{email}}">
+            </div>
+          </div>
+
+        <div class="form-row">
+            <h3>Use Credit Card Information on File</h3>
+            <h5>Or Enter new Information</h5>
+        </div>
+        <div class="form-row" id="creditcard">
+          <div class="form-row">
+              <div class="col-md-12 mb-1">
+              <label for="cardname">Name on Card</label>
+              <input type="text" class="form-control" id="cardname" name="cardname" placeholder="Name as it appears on card" value="{{cardname}}">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-md-12 mb-1">
+              <label for="cardnumber">Credit Card Number</label>
+              <input type="text" class="form-control" id="cardnumber" name="cardnumber" placeholder="XXXX XXXX XXXX XXXX" value="{{cardnumber}}">
+            </div>
+          </div>
+
+        <div class="form-row">
+               <div class="col-md-3 mb-2">
+                    <label for="cardcode">Security Code</label>
+                    <input type="text" class="form-control" id="cardcode" name="cardcode" placeholder="123" value="{{cardcode}}">
+              </div>
+              <div class="col-md-3 mb-2">
+                 <label for="zipcode">Zip Code</label>
+                <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="XXXXX" value="{{zipcode}}">
+              </div>
+          </div>
+    </div>
+        <hr>
+        <button class="btn btn-outline-primary" type="submit">Submit Payment</button>
+    </form>
+</div>
+</div>
+
+
+{% endblock %}
