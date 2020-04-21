@@ -19,13 +19,19 @@ class RoomMatrix(object):
     # STORED DATA IN MEETING CLASS
     def json(self):
         return {
-            'room': self.roomNum,
+            'roomNum': self.roomNum,
             'room_id': self.room_id,
             '_id': self._id
         }
 
+    @classmethod
+    def get_room_number(cls, roomID):
+        office = Database.find_one('office', {'room_id': roomID})
+        r_number = office['room']
+        return r_number
+
     def create_room(self):
-        room = Room(meetings=None)
+        room = Room(meetings=None,roomNum=self.roomNum)
         self.room_id = room._id
         room.save_to_mongo()
         Database.insert(collection='office', data=self.json())
@@ -34,6 +40,14 @@ class RoomMatrix(object):
     @classmethod
     def get_rooms(cls):
         return [room for room in Database.find(collection='office', query={})]
+
+    # DOESN'T WORK
+    # since the Database method .find returns a pymongo cursor
+    # we use cls(**item) which returns a new dict for
+    # each list element instead of a pymongo cursor object
+    # the double **item says to pass in all arguments.
+    # TRY SOMETHING LIKE:
+    #return [cls(**item) for item in items_from_db]
 
     @classmethod
     def get_by_id(cls, m_id):
@@ -56,4 +70,6 @@ class RoomMatrix(object):
                 return True
         return False
 
+
+    # return room number
 

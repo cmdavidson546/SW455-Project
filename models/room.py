@@ -7,14 +7,15 @@ from models.meeting import Meeting
 
 class Room(object):
 
-    def __init__(self, meetings, isAvailable=True, _id=None):
+    def __init__(self, meetings, roomNum, _id=None):
         self.meetings = dict() if meetings is None else meetings
+        self.roomNum = None if roomNum is None else roomNum
         self._id = uuid.uuid4().hex if _id is None else _id
-        self.isAvailable = isAvailable
 
     def json(self):
          return {
              'meetings': self.meetings,
+             'roomNum': self.roomNum,
              '_id': self._id
          }
 
@@ -40,7 +41,7 @@ class Room(object):
             return True
         return False
 
-    ########## NEW #############
+    ########## Find Room by Meeting ID #############
     @classmethod
     def find_by_meeting(cls, meeting_id, searchKey):
         room = Database.find_one('room', {'meetings.'+searchKey: meeting_id})

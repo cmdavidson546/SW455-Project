@@ -7,12 +7,14 @@ from flask import session
 
 from common.database import Database
 
+# NEED TO ADD ROOM CLASS OBJECT INSTANCE TO EACH MEETING
 class Meeting(object):
 
     # CONSTRUCTOR
-    def __init__(self, day, time, email, members, created_date=datetime.datetime.today(), _id=None):
+    def __init__(self, day, time, r_number, email, members, created_date=datetime.datetime.today(), _id=None):
         self.day = day
         self.time = time
+        self.r_number = r_number
         self.email = email
         self.members = dict() if members is None else members
         self.created_date = created_date
@@ -23,6 +25,7 @@ class Meeting(object):
         return {
             'day': self.day,
             'time': self.time,
+            'r_number': self.r_number,
             'email': self.email,
             'members': self.members,
             '_id': self._id,
@@ -42,6 +45,9 @@ class Meeting(object):
 
     @classmethod
     def get_all_meetings(cls):
+        # cannot return class objects
+        #return [cls(**meetings) for meeting in meetings]
+
         # return list object of all meetings in DB
         return [meeting for meeting in Database.find(collection='meeting', query=None)]
 
@@ -67,6 +73,8 @@ class Meeting(object):
     # which returns error: TypeError: type object argument after ** must be a mapping, not Cursor
     @classmethod
     def get_by_email(cls, email):
+        #data = Database.find('meeting', {'email': email})
+        #return cls(**data)
         # ADD SORT TO DATABASE.py:  then add to this func: cls.sort({'email': email}
         return [meeting for meeting in Database.find(collection='meeting', query={'email': email})]
 
@@ -134,3 +142,4 @@ class Meeting(object):
     @classmethod
     def get_by_time(cls, usr_time):
         return [ meeting for meeting in Database.find(collection='meeting', query={'time': usr_time}) ]
+
