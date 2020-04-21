@@ -191,9 +191,9 @@ def back_to_profile():
         else:
             meetings = []
         if user.check_if_client():
-            return render_template('client_profile.html', email=session['email'], name=user.name, meetings=meetings)
+            return render_template('client_profile.html', email=session['email'], name=user.name)
         elif user.check_if_admin():
-            return render_template('admin_profile.html', email=session['email'], name=user.name, meetings=meetings)
+            return render_template('admin_profile.html', email=session['email'], name=user.name)
         else:
             return render_template('login_error.html', error='Invalid Request')
     return render_template('login_error.html', error='Invalid Request')
@@ -240,19 +240,19 @@ def create_meeting():
 
         # get all available rooms in DB
         rooms = RoomMatrix.get_rooms()
-        print(len(rooms))
-        # gets random room number to assign new meetings
-        # ultimately need to add ability to change
-        # between available rooms as a choice for user
+
+        # gets random room number to assign new meetings to random room number
         random.random()
         # random.randint selects (start, end) with both ends inclusive
         r_int = random.randint(0, (len(rooms)-1))
+        # get room object using a random room_id assigned from the RoomMatrix
         room = Room.get_from_mongo(rooms[r_int]['room_id'])
-
+        # room object stores room number
+        r_number = room.roomNum
         # create the meeeting
-        meeting = Meeting(day=day, time=time, email=email, members=member_emails)
+        meeting = Meeting(day=day, time=time, r_number=r_number, email=email, members=member_emails)
 
-        # if meeting day/time available, update room list of meetings and save meeting to DB
+        # if meeting day/time available, ALSO update room list with new meeting and save meeting to DB
         if meeting.isAvailable(day, time):
             room.update_meetings(room._id, day + time, meeting._id)
             meeting.save_to_mongo()
@@ -272,22 +272,12 @@ def delete_one(meeting_id):
     # to delete them from 'room' collection
     # .get_rooms() returns a dict() object which must be access like a python dict().
     # room_id is accessed as room['room_id'] but not room.room_id (class access)
-    rooms = RoomMatrix.get_rooms()
-    for room in rooms:
-        print(room['room'])
-        print(room['room_id'])
 
     # search rooms by a meeting_id; if search returns True
     if Room.find_by_meeting(searchKey=searchKey, meeting_id=meeting_id):
         room_object = Room.find_by_meeting(searchKey=searchKey, meeting_id=meeting_id)
 
-        # returns a room() object that has the meeting
-        print(room_object)
-        # returning a room object we can access the room_id that contains the meeting
-        print(room_object._id)
-
-
-    # update the room using _id to erase the meeting from the existing meeting. list
+        # update the room using _id to erase the meeting from the existing meeting. list
         Room.erase_meeting(room_id=room_object._id, searchKey=searchKey)
 
 
@@ -300,6 +290,7 @@ def delete_one(meeting_id):
 def get_meetings():
     if session['email'] is not None:
         user = User.get_by_email(session['email'])
+
         if Meeting.get_by_email(session['email']) is not None:
             meetings = Meeting.get_by_email(session['email'])
         else:
@@ -333,7 +324,7 @@ def edit_meeting(meeting_id):
         p8 = request.form['p8']
         p9 = request.form['p9']
         p10 = request.form['p10']
-
+        # make json object (or python dict...same thing)
         members = {
             'p1': p1,
             'p2': p2,
@@ -346,29 +337,33 @@ def edit_meeting(meeting_id):
             'p9': p9,
             'p10': p10
         }
+
+        # double check the meeeting day-time combo is not taken already
+        # proceed to check if anything has changed from original...
+        # if so swap using update_meeting()
         if meeting.isAvailable(day, time):
             if day != meeting.day:
                 meeting.update_meeting(meeting_id, 'day', day)
             if time != meeting.time:
                 meeting.update_meeting(meeting_id, 'time', time)
 
-        # Next Compare dictionaries of user changes vs. original db
+        # Next Compare dictionaries of user made member-list vs. original member-list
+        # returns the different items between the two dictionaries in the member dicts
         items_to_update = dict_compare(meeting.members, members)
-        #print(items_to_update)
 
         if items_to_update is not None:
-            # meeting.update_meeting(meeting_id, key, items_to_update[key])
+            # get keys of the elements in the update list
             k = items_to_update.keys()
             for key in k:
                 # items[key] returns a tuple: ('OLD VALUE', 'NEW VALUE') so we need the second element
                 v = items_to_update[key][1]
                 meeting.update_members(meeting_id, key, v)
-
-            # GETS MEETINGS ".get_by_email() method"
+        # GET MEETINGS
         meetings = Meeting.get_by_email(session['email'])
         return render_template('meetings-by-creator.html', email=session['email'], name=user.name, meetings=meetings)
     return render_template('create_meeting_error.html', error='Could not update Meeting')
 
+#### COMPARE 2 DICTIONARIES ####
 def dict_compare(d1, d2):
     # convert data to set()
     d1_keys = set(d1.keys())
@@ -402,7 +397,8 @@ def send_to_edit_profile():
     cardnumber = user.userinfo['cardnumber']
     cardcode = user.userinfo['cardcode']
     zipcode = user.userinfo['zipcode']
-    return render_template('edit_profile.html', user=user, firstName=firstName, lastName=lastName, cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
+    return render_template('edit_profile.html', user=user, firstName=firstName, lastName=lastName, cardname=cardname,
+                           cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
 
 
 @app.route('/edit_billing_admin', methods=['POST'])
@@ -484,8 +480,6 @@ def edit_profile():
             user.update_userinfo(user._id, key, v)
     return make_response(back_to_profile())
 
-
-
 ########## Search By Participation ############
 @app.route('/participation-as-member')
 def participation_membership():
@@ -529,6 +523,7 @@ def display_meetings_by_room():
         room_id = room['room_id']
         # returns class
         room_for_meetings = Room.get_from_mongo(room_id)
+############# NEED TO FIX - PRINTS ALL MEETINGS FOR EVERY ROOM ##################
         for meeting in room_for_meetings.meetings:
             if room_for_meetings.meetings[meeting] is not None:
                 #meetings.append(room_for_meetings.meetings[meeting])
@@ -563,7 +558,6 @@ def display_by_user():
     meetingsC = Meeting.get_by_email(user_email)
     meetingsP = Meeting.get_members(user_email)
     return render_template('meetings-by-usr.html', email=user_email, meetingsC=meetingsC, meetingsP=meetingsP)
-
 
 
 
