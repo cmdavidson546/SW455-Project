@@ -14,79 +14,83 @@
                     <div class="container">
                         <div class="row">
 
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Display Meetings</h5>
-                                <button id="week-btn" class="btn btn-primary btn-sm"><a href="/display_by_week" style="color: white;">Display</a></button>
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Display Meetings</h5>
+                                <div class="btn-mystyle"><button id="week-btn" class="btn btn-outline-primary"><a href="/display_by_week">Display</a></button></div>
                             </div>
 
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Add Room</h5>
-                                <button id="add-rm-btn" class="btn btn-primary btn-sm"><a href="/add_room" style="color: white;">Add Room</a></button>
-                            </div>
-
-                            <div class="w-100"></div>
-                            <hr>
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Display Meetings By Room</h5>
-                                <button id="room-btn" class="btn btn-primary btn-sm"><a href="/display_by_room" style="color: white;">Display</a></button>
-                            </div>
-
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Display Available Rooms</h5>
-                                <button id="display-rm-btn" class="btn btn-primary btn-sm"><a href="/view_rooms" style="color: white;">Display Rooms</a></button>
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Add Room</h5>
+                                <div class="btn-mystyle"><button id="add-rm-btn" class="btn btn-outline-primary"><a href="/add_room">Add Room</a></button></div>
                             </div>
 
                             <div class="w-100"></div>
                             <hr>
-
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Display By Day</h5>
-                                <button id="day-btn" class="btn btn-primary btn-sm" onclick="myDayFunction()">Select Day</button>
-                                <div id="day-select-form"></div>
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Display Meetings By Room</h5>
+                                <div class="btn-mystyle"><button id="room-btn" class="btn btn-outline-primary"><a href="/display_by_room">Display</a></button></div>
                             </div>
 
-                             <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Delete Room</h5>
-                                <button id="delete-rm-btn" class="btn btn-primary btn-sm"><a href="/delete_room" style="color: white;">Delete Room</a></button>
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Display Available Rooms</h5>
+                                <div class="btn-mystyle"><button id="display-rm-btn" class="btn btn-outline-primary"><a href="/view_rooms">Display Rooms</a></button></div>
                             </div>
 
                             <div class="w-100"></div>
                             <hr>
 
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Display By Time</h5>
-                                <button id="time-btn" class="btn btn-primary btn-sm" onclick="myTimeFunction()">Select Time</button>
-                                <div id="time-select-form"></div>
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Display By Day</h5>
+                                <div class="btn-mystyle"><button id="day-btn" class="btn btn-outline-primary" onclick="myDayFunction()">Select Day</button></div>
+                                <br>
+                                <div class = "profile-style2" id="day-select-form"></div>
                             </div>
 
-                             <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Create New Admin</h5>
-                                <button id="create-admin-btn" class="btn btn-primary btn-sm"><a href="/register_by_admin" style="color: white;">Create</a></button>
-                            </div>
-
-                            <div class="w-100"></div>
-                            <hr>
-
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Display By User</h5>
-                                <button id="usr-btn" class="btn btn-primary btn-sm" onclick="myUserFunction()">Select User</button>
-                                <div id="user-select-form"></div>
-                            </div>
-
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Update Billing</h5>
-                                <button id="update-bill-btn" class="btn btn-primary btn-sm" onclick="updateBillFunction()">Select Client</button>
-                                <div id="update-bill-form"></div>
+                             <div class="col profile-divs">
+                                <h5 class = "profile-style1">Delete Room</h5>
+                                 <div class="btn-mystyle"><button id="delete-rm-btn" class="btn btn-outline-primary"><a href="/delete_room">Delete Room</a></button></div>
                             </div>
 
                             <div class="w-100"></div>
                             <hr>
 
-                            <div class="col" style="border:1px solid gray; border-radius:5px; padding:5px;">
-                                <h5>Review Complaints</h5>
-                                <button id="view-cmplts-btn" class="btn btn-primary btn-sm"><a href="/view_complaints" style="color: white;">View</a></button>
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Display By Time</h5>
+                                <div class="btn-mystyle"><button id="time-btn" class="btn btn-outline-primary" onclick="myTimeFunction()">Select Time</button></div>
+                                <br>
+                                <div class = "profile-style2" id="time-select-form"></div>
                             </div>
-                            <div class="col">
+
+                             <div class="col profile-divs">
+                                <h5 class = "profile-style1">Create New Admin</h5>
+                                 <div class="btn-mystyle"><button id="create-admin-btn" class="btn btn-outline-primary"><a href="/register_by_admin">Create</a></button></div>
+                            </div>
+
+                            <div class="w-100"></div>
+                            <hr>
+
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Display By User</h5>
+                                <div class="btn-mystyle"><button id="usr-btn" class="btn btn-outline-primary" onclick="myUserFunction()">Select User</button></div>
+                                <br>
+                                <div class = "profile-style2" id="user-select-form"></div>
+                            </div>
+
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Update Billing</h5>
+                                <div class="btn-mystyle"><button id="update-bill-btn" class="btn btn-outline-primary" onclick="updateBillFunction()">Select Client</button></div>
+                                <br>
+                                <div class = "profile-style2" id="update-bill-form"></div>
+                            </div>
+
+                            <div class="w-100"></div>
+                            <hr>
+
+                            <div class="col profile-divs">
+                                <h5 class = "profile-style1">Review Complaints</h5>
+                                <div class="btn-mystyle"><button id="view-cmplts-btn" class="btn btn-outline-primary"><a href="/view_complaints">View</a></button></div>
+                            </div>
+                            <div class="col profile-divs">
 
                             </div>
 
@@ -109,12 +113,14 @@
                 myForm.action = "/display_by_day";
                 myForm.method = "POST";
                 myForm.id = "meeting-form";
+                myForm.class = "profile-style2";
 
                 var myDayDrop = document.createElement("select");
                 myDayDrop.form = "meeting-form";
-                myDayDrop.class = "btn btn-primary btn-small";
+                myDayDrop.class = "profile-drop-menu";
                 myDayDrop.id = "day-select";
                 myDayDrop.name = "day-select";
+                myDayDrop.style = "margin:10px;";
 
                 var opt1 = document.createElement('option');
                 opt1.appendChild( document.createTextNode('Monday') );
@@ -139,10 +145,11 @@
                 myDayDrop.appendChild(opt5);
 
                 var myBtn = document.createElement("button");
-                myBtn.class = "btn btn-primary btn-sm";
+                myBtn.class = "profile-drop-button";
                 myBtn.id = "return-day";
                 myBtn.type = "submit";
                 myBtn.innerHTML = "Find By Day";
+                myBtn.style = "margin:10px;";
 
                 user_div.appendChild(myForm);
                 myForm.appendChild(myDayDrop);
@@ -160,12 +167,14 @@
                 myForm.action = "/display_by_time";
                 myForm.method = "POST";
                 myForm.id = "meeting-form2";
+                myForm.class = "profile-style2";
 
                 var myTimeDrop = document.createElement("select");
                 myTimeDrop.form = "meeting-form2";
-                myTimeDrop.class = "btn btn-primary btn-small";
+                myTimeDrop.class = "profile-drop-menu";
                 myTimeDrop.id = "time-select";
                 myTimeDrop.name = "time-select";
+                myTimeDrop.style = "margin:10px;";
 
                 var opt1 = document.createElement('option');
                 opt1.appendChild( document.createTextNode('9:00 AM') );
@@ -206,10 +215,11 @@
                 myTimeDrop.appendChild(opt9);
 
                 var myBtn = document.createElement("button");
-                myBtn.class = "btn btn-primary btn-sm";
+                myBtn.class = "profile-drop-button";
                 myBtn.id = "return-time";
                 myBtn.type = "submit";
                 myBtn.innerHTML = "Find By Timeslot";
+                myBtn.style = "margin:10px;";
 
                 user_div.appendChild(myForm);
                 myForm.appendChild(myTimeDrop);
@@ -225,17 +235,21 @@
                 var myForm = document.createElement("form");
                 myForm.action = "/display_by_user";
                 myForm.method = "POST";
+                myForm.class = "profile-style2";
+
                 var myInput = document.createElement("input");
                 myInput.type = "text";
-                myInput.class = "form-control";
+                myInput.class = "profile-input";
                 myInput.id = "user-select-input";
                 myInput.name = "user-select-input";
                 myInput.placeholder = "Enter user email";
+
                 var myBtn = document.createElement("button");
-                myBtn.class = "btn btn-primary btn-sm";
+                myBtn.class = "profile-drop-button";
                 myBtn.id = "return-user";
                 myBtn.type = "submit";
                 myBtn.innerHTML = "Find By User";
+
                 user_div.appendChild(myForm);
                 myForm.appendChild(myInput);
                 myForm.appendChild(myBtn);
@@ -249,16 +263,17 @@
                 var myForm = document.createElement("form");
                 myForm.action = "/edit_billing_admin";
                 myForm.method = "POST";
+                myForm.class = "profile-style2";
 
                 var myInput = document.createElement("input");
                 myInput.type = "text";
-                myInput.class = "form-control";
+                myInput.class = "profile-input";
                 myInput.id = "update-bill-input";
                 myInput.name = "update-bill-input";
                 myInput.placeholder = "Enter user email";
 
                 var myBtn = document.createElement("button");
-                myBtn.class = "btn btn-primary btn-sm";
+                myBtn.class = "profile-drop-button";
                 myBtn.id = "update-billing";
                 myBtn.type = "submit";
                 myBtn.innerHTML = "Find By User";

@@ -32,3 +32,36 @@ h1 {
 body {
     background-color: white;
 }
+
+.profile-divs {
+    background-color: white;
+    border:1px solid gray;
+    border-radius:5px;
+    padding:5px;
+}
+
+.profile-style1 {
+    text-align: center;
+}
+
+.profile-style2 {
+    display:flex;
+    justify-content: center;
+}
+
+.btn-mystyle {
+    display:flex;
+    justify-content: center;
+}
+
+.profile-drop-menu {
+
+}
+
+.profile-drop-button {
+
+}
+
+.profile-input {
+
+}

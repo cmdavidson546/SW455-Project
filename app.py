@@ -181,6 +181,8 @@ def client_login():
     # get email and password : IN OTHER ITERATIONS WE CAN GET POST from hidden ajax login form
     email = request.form['email']
     password = request.form['password']
+    if password is None:
+        password = ""
     if request.method == 'POST':
         if Client.login_valid(email=email, password=password):
             Client.login(email)
@@ -426,15 +428,17 @@ def send_to_edit_billing():
     email = request.form['update-bill-input']
     if email is not None:
         user = User.get_by_email(email)
-        name = user.name.split(',')
-        firstName = name[1]
-        lastName = name[0]
-        cardname = user.userinfo['cardname']
-        cardnumber = user.userinfo['cardnumber']
-        cardcode = user.userinfo['cardcode']
-        zipcode = user.userinfo['zipcode']
-        return render_template('edit-profile-by-admin.html', email=email, firstName=firstName, lastName=lastName,
-                               cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
+        if user is not False:
+            name = user.name.split(',')
+            firstName = name[1]
+            lastName = name[0]
+            cardname = user.userinfo['cardname']
+            cardnumber = user.userinfo['cardnumber']
+            cardcode = user.userinfo['cardcode']
+            zipcode = user.userinfo['zipcode']
+            return render_template('edit-profile-by-admin.html', email=email, firstName=firstName, lastName=lastName,
+                                   cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
+    return render_template('update-billing-error.html', error='No User found by that email address.')
 
 @app.route('/auth/edit_profile_by_admin', methods=['POST'])
 def edit_profile_by_admin():
@@ -545,21 +549,19 @@ def display_meetings_by_room():
     # for room number and room_id
     # returns list type
     rooms = RoomMatrix.get_rooms()
-    # get meetings
-    meetings = []
-    for room in rooms:
-        room_id = room['room_id']
-        # returns class
-        room_for_meetings = Room.get_from_mongo(room_id)
 
-############# NEED TO FIX - PRINTS ALL MEETINGS FOR EVERY ROOM ##################
-        for meeting in room_for_meetings.meetings:
-            if room_for_meetings.meetings[meeting] is not None:
-                #meetings.append(room_for_meetings.meetings[meeting])
-                meetings.append(meeting)
-############# NEED TO FIX - PRINTS ALL MEETINGS FOR EVERY ROOM ##################
-    
-    return render_template('meetings-by-room.html', rooms=rooms, meetings=meetings)
+    # get meetings
+    meetings = dict()
+    for room in rooms:
+        # get room_id's from matrix list iteratively
+        room_id = room['room_id']
+
+        # obtain room in Room class format
+        meetingRoom = Room.get_from_mongo(room_id)
+        meetings.update({meetingRoom.roomNum : meetingRoom.meetings})
+    return render_template('meetings-by-room.html', meetings=meetings)
+
+
 
 ########## Display All Meetings #############
 @app.route('/display_by_week')
