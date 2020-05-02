@@ -24,7 +24,6 @@ import random
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
-newRoom = RoomMatrix()
 
 # initialize db
 @app.before_first_request
@@ -512,6 +511,7 @@ def edit_profile():
 
 @app.route('/add_room')
 def add_rooms():
+    newRoom = RoomMatrix()
     # create room returns room _id
     room_id = newRoom.create_room()
     return render_template('add-room-success.html')
