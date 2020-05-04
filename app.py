@@ -664,7 +664,7 @@ def pay_special_payments():
 
 @app.route('/view/special_payments')
 def view_special_payments():
-    payments = Payment.get_from_mongo()
+    payments = Payment.get_payment_by_email(session['email'])
     return render_template('view-payments.html', payments=payments)
 
 @app.route('/pay_delete_one/<string:payment_id>')

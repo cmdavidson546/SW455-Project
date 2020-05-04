@@ -32,10 +32,13 @@
     <script>
     function myFunction() {
 
+      var lab = document.getElementById("admin-label");
       var x = document.getElementById("admincode");
       if (x.style.display === "none") {
+        lab.style.display = "block";
         x.style.display = "block";
       } else {
+        lab.style.display = "none";
         x.style.display = "none";
       }
 
@@ -48,9 +51,6 @@
       }
     }
     </script>
-
-
-
 
     <script>
         function myFunction2() {
@@ -69,6 +69,7 @@
 <form class="needs-validation" id="register-form" action="/auth/register" method="post" novalidate>
     <div class="form-row" id="entercode" >
         <input type="password" class="form-control" id="admin" name="admin" value="0" style="display:none;">
+        <label id="admin-label" style="display:none;">Enter Provided Code to Register as Admin:</label>        
         <input type="password" class="form-control" id="admincode" name="admincode" placeholder="Enter code provided to you" value="" style="display:none;">
     </div>
     <div class="form-row" id="entercard" style="display:none;">
