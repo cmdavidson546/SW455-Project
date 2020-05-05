@@ -1,0 +1,21 @@
+ {% extends "index_user.html" %}
+
+{% block content %}
+
+<div class="container page-form">
+    <div class="main-content container-fluid">
+
+        <div class="card card-border-color card-border-color-primary">
+
+            <div class="card-header">Delete Room Error</div>
+
+            <div class="card-body">
+                <p>{{ error }}</p>
+                <p>Please Make Sure All Meetings are Deleted Before Deleting Room</p>
+                <a href='/back_to_profile' class="btn btn-outline-primary" role="button">Back to Profile</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

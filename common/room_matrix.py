@@ -51,15 +51,14 @@ class RoomMatrix(object):
         return r_id
 
     @classmethod
-    def delete_room(cls, office_id, room_id=None):
+    def delete_room(cls, office_id, room_id):
         if room_id is not None:
-            RoomMatrix.counter -= 1
             # room.from_mongo(by_id) should return a class object
             # so we can use (.) operator to access members of room
             room = Room.get_from_mongo(room_id)
             # need to make sure we don't delete room and its corresponding matrix_id
             # if there are existing meetings in the room object; else don't delete either object
-            if room.meetings is None:
+            if len(room.meetings) < 1:
                 room.delete_room_base(room_id)
                 Database.remove_one(collection='office', searchVal=office_id)
                 return True

@@ -529,9 +529,12 @@ def delete_room_redirect():
 # ######### delete room from room_matrix and room.py #############
 @app.route('/delete_room/<string:office_id>')
 def delete_room(office_id):
+    # get the room object _id to delete
     room_id = RoomMatrix.get_by_id(office_id)
-    RoomMatrix.delete_room(office_id, room_id)
-    return make_response(back_to_profile())
+    # send matrix _id and room _id
+    if RoomMatrix.delete_room(office_id, room_id) is True:
+        return make_response(back_to_profile())
+    return render_template('delete-room-error.html', error="Delete Fail.Meetings May Be in Progress")
 
 ############################################
 ########### SEARCH AND DISPLAY METHODS ###########
