@@ -62,3 +62,9 @@ class Database(object):
         query = {'_id' : room_id}
         newdata = {'$set' : {'meetings.'+newKey : newVal} }
         Database.DATABASE['room'].update(query, newdata)
+    
+    @staticmethod
+    def update_counter(counter_id, update_values):
+        query = {'_id': counter_id}
+        newdata = {'$set' : update_values }
+        Database.DATABASE['counter'].update(query, newdata)

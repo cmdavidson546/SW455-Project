@@ -5,11 +5,11 @@ from common.database import Database
 from models.room import Room
 
 ####################################
-# ROOM MATRIX: Keeps Track of Rooms Available for meetings 
+# ROOM MATRIX: Keeps Track of Rooms Available for meetings
 ####################################
 
 class RoomMatrix(object):
-    counter = 0     # shared for all instances
+    counter = 2     # shared for all instances
 
     # CONSTRUCTOR
     def __init__(self, roomNum=None, room_id=None, _id=None):
@@ -25,6 +25,7 @@ class RoomMatrix(object):
             'room_id': self.room_id,
             '_id': self._id
         }
+    
     #### INSTANCE METHODS ####
     def create_room(self):
         room = Room(meetings=None,roomNum=self.roomNum)
@@ -59,9 +60,13 @@ class RoomMatrix(object):
             # need to make sure we don't delete room and its corresponding matrix_id
             # if there are existing meetings in the room object; else don't delete either object
             if len(room.meetings) < 1:
+                if RoomMatrix.counter > 2:
+                    RoomMatrix.counter -= 1
                 room.delete_room_base(room_id)
                 Database.remove_one(collection='office', searchVal=office_id)
                 return True
         return False
+
+
 
 

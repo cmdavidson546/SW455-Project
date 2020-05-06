@@ -35,6 +35,7 @@ def initialize_database():
 def open_app():
     return render_template('user_type.html')
 
+
 ##################################################################
 ####### INITIAL STARTUP, LOGIN, LOGOFF, REGISTER METHODS #########
 ##################################################################
@@ -50,10 +51,12 @@ def log_in_by_user_type():
         return render_template('register.html')
     return render_template('user_type.html')
 
+
 # set route path to login
 @app.route('/login')
 def user_home():
     return render_template('user_type.html')
+
 
 # path to logout - NEED TO SEE IF "User.logout()" is buggy for Admin and Client users
 @app.route('/auth/logout')
@@ -71,14 +74,15 @@ def user_logout():
 def register_page():
     return render_template('register.html')
 
+
 # route to register page from admin
 @app.route('/register_by_admin')
 def register_page_byadmin():
     return render_template('register-by-admin.html')
 
+
 @app.route('/auth/register_by_admin', methods=['POST'])
 def register_user_by_admin():
-
     # make name suitable for db
     fname = request.form['fname']
     lastname = request.form['lastname']
@@ -101,6 +105,7 @@ def register_user_by_admin():
             Admin.register(name=name, email=email, password=password, usertype='admin', userinfo=acode)
             return make_response(back_to_profile())
     return render_template('registration_error.html', error='Invalid registration')
+
 
 # endpoint from main registration form  -> client_profile.html
 @app.route('/auth/register', methods=['POST', 'GET'])
@@ -175,6 +180,8 @@ def admin_login():
                 return render_template('admin_profile.html', email=session['email'])
     return render_template('login_error.html', error='The email or password credentials do not match.')
 
+
+
 # create session for logged in user -> client_profile.html
 @app.route('/client/login', methods=['POST', 'GET'])
 def client_login():
@@ -189,11 +196,13 @@ def client_login():
             return render_template('client_profile.html', email=session['email'])
     return render_template('login_error.html', error='The email or password credentials do not match.')
 
+
 ####### FORGOT PASSWORD DIRECTION #########
 # link to profile... user must be logged in
 @app.route('/pages-forgot-password')
 def forgot_password():
     return render_template('pages-forgot-password.html')
+
 
 ############################################
 ####### BACK TO MENU LINK METHODS #########
@@ -216,6 +225,7 @@ def back_to_profile():
             return render_template('login_error.html', error='Invalid Request')
     return render_template('login_error.html', error='Invalid Request')
 
+
 ############################################
 ########### MEETING METHODS ###########
 ############################################
@@ -223,6 +233,7 @@ def back_to_profile():
 @app.route('/auth/newmeeting', methods=['POST', 'GET'])
 def new_meeting():
     return render_template('create_meeting.html')
+
 
 @app.route('/meeting/createnew', methods=['POST', 'GET'])
 def create_meeting():
@@ -261,7 +272,7 @@ def create_meeting():
         # gets random room number to assign new meetings to random room number
         random.random()
         # random.randint selects (start, end) with both ends inclusive
-        r_int = random.randint(0, (len(rooms)-1))
+        r_int = random.randint(0, (len(rooms) - 1))
         # get room object using a random room_id assigned from the RoomMatrix
         room = Room.get_from_mongo(rooms[r_int]['room_id'])
         # room object stores room number
@@ -276,6 +287,7 @@ def create_meeting():
             return make_response(back_to_profile())
     return render_template('create_meeting_error.html', error="Meeting Day-Time already taken", email=session['email'])
 
+
 ########## Delete Meeting  #############
 @app.route('/delete_one/<string:meeting_id>')
 def delete_one(meeting_id):
@@ -283,7 +295,7 @@ def delete_one(meeting_id):
     meeting = Meeting.from_mongo(meeting_id)
     day = meeting.day
     time = meeting.time
-    searchKey = day+time
+    searchKey = day + time
 
     # find rooms with the given meeting_id in the 'meetings.**' field
     # to delete them from 'room' collection
@@ -301,6 +313,7 @@ def delete_one(meeting_id):
     meeting.delete_meeting(meeting_id)
     return make_response(back_to_profile())
 
+
 ########## Display Meetings #############
 @app.route('/meetings-participation')
 def get_meetings():
@@ -314,11 +327,13 @@ def get_meetings():
         return render_template('meetings-by-creator.html', email=session['email'], name=user.name, meetings=meetings)
     return make_response(back_to_profile())
 
+
 # EDIT MEETING
 @app.route('/edit_one/<string:meeting_id>')
 def goto_edit_meeting(meeting_id):
     meeting = Meeting.from_mongo(meeting_id)
     return render_template('edit_meeting.html', meeting=meeting)
+
 
 @app.route('/edit_meeting/<string:meeting_id>', methods=['POST'])
 def edit_meeting(meeting_id):
@@ -379,6 +394,7 @@ def edit_meeting(meeting_id):
         return render_template('meetings-by-creator.html', email=session['email'], name=user.name, meetings=meetings)
     return render_template('create_meeting_error.html', error='Could not update Meeting')
 
+
 ############################################
 ########### COMPARE 2 DICTIONARIES ###########
 ############################################
@@ -401,9 +417,8 @@ def dict_compare(d1, d2):
 
     # returns dictionary of all keys that exist in both dicts that are the same
     same = set(o for o in intersect_keys if d1[o] == d2[o])
-    #print(modified)
-    #print(same)
     return modified
+
 
 #######################################################
 ####### PROFILE and BILLING METHODS ###########
@@ -422,7 +437,7 @@ def send_to_edit_profile():
     return render_template('edit_profile.html', user=user, firstName=firstName, lastName=lastName, cardname=cardname,
                            cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
 
-
+# edit billing info by admin
 @app.route('/edit_billing_admin', methods=['POST'])
 def send_to_edit_billing():
     email = request.form['update-bill-input']
@@ -439,6 +454,7 @@ def send_to_edit_billing():
             return render_template('edit-profile-by-admin.html', email=email, firstName=firstName, lastName=lastName,
                                    cardname=cardname, cardnumber=cardnumber, cardcode=cardcode, zipcode=zipcode)
     return render_template('update-billing-error.html', error='No User found by that email address.')
+
 
 @app.route('/auth/edit_profile_by_admin', methods=['POST'])
 def edit_profile_by_admin():
@@ -464,9 +480,9 @@ def edit_profile_by_admin():
             user.update_userinfo(user._id, key, v)
     return make_response(back_to_profile())
 
+
 @app.route('/auth/edit_profile', methods=['POST'])
 def edit_profile():
-
     fname = request.form['fname']
     lname = request.form['lname']
 
@@ -516,15 +532,18 @@ def add_rooms():
     room_id = newRoom.create_room()
     return render_template('add-room-success.html')
 
+
 @app.route('/view_rooms')
 def view_rooms():
     rooms = RoomMatrix.get_rooms()
     return render_template('view-avail-rooms.html', rooms=rooms)
 
+
 @app.route('/delete_room')
 def delete_room_redirect():
     rooms = RoomMatrix.get_rooms()
     return render_template('view-avail-rooms.html', rooms=rooms)
+
 
 # ######### delete room from room_matrix and room.py #############
 @app.route('/delete_room/<string:office_id>')
@@ -535,6 +554,7 @@ def delete_room(office_id):
     if RoomMatrix.delete_room(office_id, room_id) is True:
         return make_response(back_to_profile())
     return render_template('delete-room-error.html', error="Delete Fail.Meetings May Be in Progress")
+
 
 ############################################
 ########### SEARCH AND DISPLAY METHODS ###########
@@ -558,12 +578,10 @@ def display_meetings_by_room():
     for room in rooms:
         # get room_id's from matrix list iteratively
         room_id = room['room_id']
-
         # obtain room in Room class format
         meetingRoom = Room.get_from_mongo(room_id)
         meetings.update({meetingRoom.roomNum : meetingRoom.meetings})
     return render_template('meetings-by-room.html', meetings=meetings)
-
 
 
 ########## Display All Meetings #############
@@ -572,6 +590,7 @@ def display_all():
     meetings = Meeting.get_all_meetings()
     return render_template('meetings-by-week.html', meetings=meetings)
 
+
 ########## Display Meetings by Day of the Week #############
 @app.route('/display_by_day', methods=['POST'])
 def display_by_day():
@@ -579,12 +598,14 @@ def display_by_day():
     meetings = Meeting.get_by_day(day_select)
     return render_template('meetings-by-day.html', meetings=meetings)
 
+
 ########## Display Meetings by Time of the Day #############
 @app.route('/display_by_time', methods=['POST'])
 def display_by_time():
     time_select = request.form['time-select']
     meetings = Meeting.get_by_time(time_select)
     return render_template('meetings-by-time.html', meetings=meetings)
+
 
 ########## Display Meetings by User #############
 @app.route('/display_by_user', methods=['POST'])
@@ -603,6 +624,7 @@ def display_by_user():
 def fileComplaint():
     return render_template('file-complaint.html', email=session['email'])
 
+
 @app.route('/auth/file_complaint', methods=['POST'])
 def file_complaint():
     email = request.form['email']
@@ -610,6 +632,7 @@ def file_complaint():
     complaint = Complaint(email, message)
     complaint.save_to_mongo()
     return make_response(back_to_profile())
+
 
 @app.route('/view_complaints')
 def view_complaints():
@@ -622,11 +645,12 @@ def respond_to_complaint(complaint_id):
     complaint = Complaint.get_by_id(complaint_id)
     return render_template('respond-to-complaint.html', complaint=complaint)
 
+# Does not do anything... final version should allow
 @app.route('/auth/comp_respond_one', methods=['POST'])
 def response_to_complaint():
     message = request.form['message']
-    print(message)
     return make_response(back_to_profile())
+
 
 @app.route('/comp_delete_one/<string:complaint_id>')
 def delete_complaint(complaint_id):
@@ -680,6 +704,7 @@ def delete_payment(payment_id):
 def edit_payment(payment_id):
     payment = Payment.get_by_id(payment_id)
     return make_response(back_to_profile())
+
 
 
 #############################################
